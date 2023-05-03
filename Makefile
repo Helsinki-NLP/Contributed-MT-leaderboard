@@ -43,15 +43,17 @@ UPDATE_LEADERBOARDS := $(foreach m,${METRICS},$(patsubst %,%$(m)-scores.txt,${UP
 
 
 
-LANGPAIR_LISTS  := scores/langpairs.txt external-scores/langpairs.txt user-scores/langpairs.txt
-BENCHMARK_LISTS := scores/benchmarks.txt external-scores/benchmarks.txt user-scores/benchmarks.txt
+LANGPAIR_LISTS  := scores/langpairs.txt
+BENCHMARK_LISTS := scores/benchmarks.txt
+
 
 .PHONY: all
 all: scores
-	@find scores -name '*unsorted*' -empty -delete
+	find scores -name '*unsorted*' -empty -delete
 	${MAKE} -s refresh-leaderboards
-	${MAKE} -s scores/langpairs.txt scores/benchmarks.txt
-	find scores/ -name '*.txt' | grep -v unsorted | xargs git add
+	${MAKE} -s scores/langpairs.txt user-scores/benchmarks.txt
+	find scores -name '*.txt' | grep -v unsorted | xargs git add
+
 
 .PHONY: all-langpairs
 all-langpairs:
@@ -62,12 +64,12 @@ all-langpairs:
 
 
 
-USER_CONTRIBUTED_FILES  := $(shell find models/unverified -type f -name '*.output')
+USER_CONTRIBUTED_FILES  := $(shell find models -type f -name '*.output')
 USER_CONTRIBUTED_FILE   ?= $(firstword ${USER_CONTRIBUTED_FILES})
 CONTRIBUTED_USERNAME    := $(word 5,$(subst /, ,${USER_CONTRIBUTED_FILE}))
-CONTRIBUTED_MODEL       := $(patsubst models/unverified/work/unverified/${CONTRIBUTED_USERNAME}/%/,%,\
+CONTRIBUTED_MODEL       := $(patsubst models/work/${CONTRIBUTED_USERNAME}/%/,%,\
 				$(dir ${USER_CONTRIBUTED_FILE}))
-CONTRIBUTED_MODEL_YAML  := models/unverified/${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}.yml
+CONTRIBUTED_MODEL_YAML  := models/${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}.yml
 CONTRIBUTED_TRANSLATION := $(notdir ${USER_CONTRIBUTED_FILE})
 CONTRIBUTED_TRANSLATION_TESTSET  := $(basename $(basename ${CONTRIBUTED_TRANSLATION}))
 CONTRIBUTED_TRANSLATION_LANGPAIR := $(patsubst .%,%,$(suffix $(basename ${CONTRIBUTED_TRANSLATION})))
@@ -92,7 +94,7 @@ ifneq ($(wildcard ${USER_CONTRIBUTED_FILE}),)
 	@echo ${CONTRIBUTED_TRANSLATION_TESTSET}
 	@echo ${CONTRIBUTED_TRANSLATION_LANGPAIR}
 	@echo ${CONTRIBUTED_MODEL_WEBSITE}
-	${MAKE} -C models/unverified \
+	${MAKE} -C models \
 		USER_NAME='${CONTRIBUTED_USERNAME}' \
 		USER_MODEL='${CONTRIBUTED_MODEL}' \
 		TESTSETS='${CONTRIBUTED_TRANSLATION_TESTSET}' \
@@ -100,9 +102,7 @@ ifneq ($(wildcard ${USER_CONTRIBUTED_FILE}),)
 		MODEL_URL='${CONTRIBUTED_MODEL_WEBSITE}' \
 	all
 	rm -f ${USER_CONTRIBUTED_FILE}
-	${MAKE} -C models \
-		SOURCE=unverified \
-		MODEL='${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}' \
+	${MAKE} -C models MODEL='${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}' \
 	register
 	${MAKE} -s all-contributed
 else
@@ -116,16 +116,6 @@ endif
 .PHONY: fetch-zipfiles
 fetch-zipfiles:
 	${MAKE} -C models download-all
-
-
-
-.PHONY: all-contributed
-all-contributed:
-	find user-scores -name '*unsorted*' -empty -delete
-	${MAKE} -s MODELSOURCE=contributed refresh-leaderboards
-	${MAKE} -s user-scores/langpairs.txt user-scores/benchmarks.txt
-	find user-scores/ -name '*.txt' | grep -v unsorted | xargs git add
-
 
 .PHONY: langpair-scores
 langpair-scores:

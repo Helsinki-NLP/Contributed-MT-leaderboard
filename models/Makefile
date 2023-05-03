@@ -10,11 +10,11 @@
 PWD      := ${shell pwd}
 REPOHOME := ${PWD}/../
 
-ALL_SOURCES      := $(filter-out lib,$(notdir ${shell find . -maxdepth 1 -mindepth 2 -type d}))
+ALL_SOURCES := $(filter-out lib,$(notdir ${shell find . -maxdepth 1 -mindepth 2 -type d}))
 
-SOURCE     ?= huggingface/facebook
-MODEL_HOME ?= ${SOURCE}
-MODEL      ?= nllb-200-distilled-600M
+SOURCE      ?= facebook
+MODEL_HOME  ?= ${SOURCE}
+MODEL       ?= nllb-200-54.5B
 
 include lib/config.mk
 
@@ -51,11 +51,6 @@ register-all:
 	  ${MAKE} SOURCE=$$s ALL_MODELS=1 register; \
 	done
 
-.PHONY: register-contributed
-register-contributed:
-	${MAKE} SOURCE=unverified ALL_MODELS=1 register
-
-
 ## register scores from all models in current source in leaderboards
 .PHONY: register-scores
 register-scores:
@@ -86,8 +81,8 @@ ${MODEL_HOME}/%-scores.registered: ${MODEL_HOME}/%-scores.txt
 
 
 
-STORAGE_BUCKET = External-MT-leaderboard
-STORAGE_URL   := https://object.pouta.csc.fi/${STORAGE_BUCKET}
+STORAGE_BUCKET := Contributed-MT-leaderboard
+STORAGE_URL    := https://object.pouta.csc.fi/${STORAGE_BUCKET}
 
 .PHONY: upload upload-eval-files
 upload upload-eval-files:

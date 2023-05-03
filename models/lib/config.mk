@@ -51,21 +51,13 @@ MODEL_HOME      ?= ${PWD}
 MODEL_DIR       = ${MODEL_HOME}/${MODEL}
 MODEL_EVALZIP   = ${MODEL_DIR}.eval.zip
 
-ifeq ($(notdir ${MODEL_HOME}),OPUS-MT-models)
-  LEADERBOARD_DIR = ${REPOHOME}scores
-else ifeq ($(notdir ${MODEL_HOME}),Tatoeba-MT-models)
-  LEADERBOARD_DIR = ${REPOHOME}scores
-else ifeq ($(notdir ${MODEL_HOME}),unverified)
-  LEADERBOARD_DIR = ${REPOHOME}user-scores
-else
-  LEADERBOARD_DIR = ${REPOHOME}external-scores
-endif
+LEADERBOARD_DIR = ${REPOHOME}scores
+
 
 ## convenient function to reverse a list
 reverse = $(if $(wordlist 2,2,$(1)),$(call reverse,$(wordlist 2,$(words $(1)),$(1))) $(firstword $(1)),$(1))
 
-
-LEADERBOARD_GITURL = https://raw.githubusercontent.com/Helsinki-NLP/OPUS-MT-leaderboard/master
+LEADERBOARD_GITURL = https://raw.githubusercontent.com/Helsinki-NLP/Contributed-MT-leaderboard/master
 MODELSCORE_STORAGE = ${LEADERBOARD_GITURL}/models/$(notdir ${MODEL_HOME})
 
 

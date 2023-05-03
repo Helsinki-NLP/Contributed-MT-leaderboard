@@ -1,5 +1,5 @@
 
-# OPUS-MT leaderboard
+# Contributed MT leaderboard
 
 A repository of scores and leaderboard for MT models and benchmarks.
 
@@ -40,32 +40,25 @@ Scores for other models than OPUS-MT will be stored in the same way in the sub-d
 All leaderboard files follow a very simple format with two TAB-separated values and rows sorted by score. The columns are:
 
 * the actual score
-* the download link of the model
+* the model name
 
-For example, the BLEU-score leaderboard for the Flores200 devtest benchmark in German-Ukrainian is stored in [scores/deu-ukr/flores200-devtest/bleu-scores.txt](scores/deu-ukr/flores200-devtest/bleu-scores.txt) and includes lines like:
+For example, the BLEU-score leaderboard for the Flores200 devtest benchmark in German-English is stored in [scores/deu-eng/flores200-devtest/bleu-scores.txt](scores/deu-eng/flores200-devtest/bleu-scores.txt) and includes lines like:
 
 ```
-24.2	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-23.zip
-24.0	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.zip
-23.6	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-ukr/opusTCv20210807+pbt_transformer-align_2022-03-07.zip
-23.5	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-13.zip
-14.6	https://object.pouta.csc.fi/Tatoeba-MT-models/gmw-zle/opus1m-2021-02-12.zip
-...
+45.8	facebook/nllb-200-54.5B
 ```
 
 The best performaning models for each benchmark for a given language pair are listed with the following format: TAB-separated plain text files with 3 columns:
 
 * the name of the benchmark
 * the top score among all models
-* the download link for the top-scoring model
+* the name of the top-scoring model
 
-To give an example, the top BLEU score for German-Ukrainian benchmarks is stored in [scores/deu-ukr/top-bleu-scores.txt](scores/deu-ukr/top-bleu-scores.txt) with lines like:
-
+To give an example, the top BLEU score for German-English benchmarks is stored in [scores/deu-eng/top-bleu-scores.txt](scores/deu-eng/top-bleu-scores.txt) with lines like:
 
 ```
-flores200-dev	23.3	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-23.zip
-flores200-devtest	24.2	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-23.zip
-tatoeba-test-v2021-08-07	40.8	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.zip
+flores200-devtest	45.8	facebook/nllb-200-54.5B
+...
 ```
 
 
@@ -73,13 +66,8 @@ To make it easier to compare model performance, we also keep model lists sorted 
 
 
 ```
-flores tatoeba
-32.2583333333333	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-23.zip
-32.2333333333333	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.zip
-31.8166666666667	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-13.zip
-31.225	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-ukr/opusTCv20210807+pbt_transformer-align_2022-03-07.zip
-29.8125	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-ukr/opusTCv20210807+nopar+ftmono+ft95-sepvoc_transformer-tiny11-align_2022-03-23.zip
-...
+flores news
+22.95	facebook/nllb-200-54.5B
 ```
 
 
@@ -90,33 +78,27 @@ flores tatoeba
 The repository includes recipes for evaluating MT models and scores coming from systematically running MT benchmarks. 
 Each sub directory in `models` corresponds to a specific model type and includes tables of automatic evaluation results.
 
-Currently, we store results for [OPUS-MT models](https://github.com/Helsinki-NLP/Opus-MT) trained on various subsets of [OPUS](https://github.com/Helsinki-NLP/OPUS) and on the compilation distributed in connection with the [Tatoeba translation challenge](https://github.com/Helsinki-NLP/Tatoeba-Challenge/). Recently added are also evaluations of the NLLB model by Meta AI using the integration into the transformers library at huggingface.
 
-```
-OPUS-MT-models
-Tatoeba-MT-models
-facebook
-```
 
 The structure corresponds to the repository of OPUS-MT models with separate tables for different evaluation metrics (like BLEU, chrF and COMET):
 
 ```
-Tatoeba-MT-models/src-trg/model-release-name.bleu-scores.txt
-Tatoeba-MT-models/src-trg/model-release-name.spbleu-scores.txt
-Tatoeba-MT-models/src-trg/model-release-name.chrf-scores.txt
-Tatoeba-MT-models/src-trg/model-release-name.chrf++-scores.txt
-Tatoeba-MT-models/src-trg/model-release-name.comet-scores.txt
+models/provider/model-release-name.bleu-scores.txt
+models/provider/model-release-name.spbleu-scores.txt
+models/provider/model-release-name.chrf-scores.txt
+models/provider/model-release-name.chrf++-scores.txt
+models/provider/model-release-name.comet-scores.txt
 ```
 
-`src` and `trg` typically correspond to source and target language identifiers but may also refer to sets of languages or other characteristics of the model (for example, `gmw` for Western Germanic languages or `de+en+sv` for specific language combinations). The `model-release-name` corresponds to the release name of the model.
+The `provider` specifies the name of the provider (for example `facebook`). The `model-release-name` corresponds to the release name of the model (for example `nllb-200-54.5B`).
 
 There is also another file that combines BLEU and chrF scores together with some other information about the test set and the model (see further down below).
 
 ```
-Tatoeba-MT-models/src-trg/model-release-name.scores.txt
+models/provider/model-release-name.scores.txt
 ```
 
-Additional metrics can be added using the same format replacing `metric` in `src-trg/model-release-name.metric-scores.txt` with a descriptive unique name of the metric.
+Additional metrics can be added using the same format replacing `metric` in `model-release-name.metric-scores.txt` with a descriptive unique name of the metric.
 
 Note that chrF scores should for historical reasons be with decimals and not in percentages as they are given by current versions of sacrebleu. This is to match the implementation of the web interface of the OPUS-MT leaderboard.
 
@@ -126,17 +108,19 @@ Note that chrF scores should for historical reasons be with decimals and not in 
 
 Each model score file for each specific evaluation metric follows a very simple format: The file is a plain text file with TAB-separated values in three columns specifying
 
-* the language pair of the benchmark (e.g. `deu-ukr`)
+* the language pair of the benchmark (e.g. `eng-rus`)
 * the name of the benchmark (e.g. `flores200-devtest`)
 * the score
 
-As an example, the German - Eastern Slavic languages model [models/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.bleu-scores.txt](models/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.bleu-scores.txt) includes the following lines:
+As an example, the English - Russian wmt19 model from facebook [models/facebook/nllb-200-54.5B.bleu-scores.txt](models/facebook/nllb-200-54.5B.bleu-scores.txt) includes the following lines:
 
 ```
-deu-bel	flores200-devtest	9.6
-deu-rus	flores200-devtest	25.9
-deu-ukr	flores200-devtest	24.0
-deu-ukr	tatoeba-test-v2021-08-07	40.8
+ace_Arab-ace_Latn	flores200-devtest	6.8
+ace_Arab-acm	flores200-devtest	2.5
+ace_Arab-acq	flores200-devtest	2.4
+ace_Arab-aeb	flores200-devtest	3.3
+ace_Arab-afr	flores200-devtest	8.0
+...
 ```
 
 
@@ -146,12 +130,18 @@ The only file that differs from this general format is the `src-trg/model-releas
 * the size of the benchmark in terms of the number of sentences
 * the size of the benchmark in terms of the number of tokens
 
-Here is an example from [models/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.scores.txt](models/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.scores.txt):
+Here is an example from [models/facebook/nllb-200-54.5B.scores.txt](models/facebook/nllb-200-54.5B.scores.txt):
 
 ```
-deu-bel	flores101-devtest	0.38804	9.6	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.zip	1012	24829
-deu-ukr	flores200-devtest	0.53137	24.0	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.zip	1012	22810
-deu-ukr	tatoeba-test-v2021-08-07	0.62852	40.8	https://object.pouta.csc.fi/Tatoeba-MT-models/deu-zle/opusTCv20210807_transformer-big_2022-03-19.zip	10319	56287
+ace_Arab-ace_Latn	flores200-devtest	0.36182	6.8	facebook/nllb-200-54.5B	1012	24121
+ace_Arab-acm	flores200-devtest	0.2232	2.5	facebook/nllb-200-54.5B	1012	20497
+ace_Arab-acq	flores200-devtest	0.21289	2.4	facebook/nllb-200-54.5B	1012	20945
+ace_Arab-aeb	flores200-devtest	0.2582	3.3	facebook/nllb-200-54.5B	1012	20498
+ace_Arab-afr	flores200-devtest	0.34476	8.0	facebook/nllb-200-54.5B	1012	25740
+ace_Arab-ajp	flores200-devtest	0.27019	4.1	facebook/nllb-200-54.5B	1012	20450
+ace_Arab-aka	flores200-devtest	0.24491	3.9	facebook/nllb-200-54.5B	1012	29549
+ace_Arab-als	flores200-devtest	0.33013	8.8	facebook/nllb-200-54.5B	1012	27783
+...
 ```
 
 
