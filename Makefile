@@ -1,9 +1,22 @@
 # -*-makefile-*-
+#
+#  eval and register a system output with the following command
+#
+#  make USER=username MODELNAME=modelname BENCHMARK=testset LANGPAIR=xxx-yyy FILE=filename eval
+#
+#    username  = name of the user/provider of the system translation
+#    modelname = name of the model that produced the translations (ASCII and no spaces!)
+#    testset   = name of a valid test set in our collection (e.g.. flores200-devtest)
+#    xxx-yyy   = language pair of the test set (e.g. deu-eng)
+#    filename  = path and filename to the system output to be evaluated
+#
+#
+# TODO: add more metadata (model-yaml file) like website, ...
+#---------------------------------------------------------------------------------------------
 
 
 PWD      := ${shell pwd}
 REPOHOME := ${PWD}/
-
 
 
 ## all language pairs and all evaluation metrics
@@ -64,11 +77,77 @@ all-langpairs:
 
 
 
+#--------------------------------------------------
+# make [ARGS] eval
+#
+# evaluate some system output on an existing benchmark
+# - expected ARGS:
+#
+#   USER=username
+#   MODELNAME=modelname
+#   LANGPAIR=src-trg
+#   FILE=filename
+#
+#--------------------------------------------------
+
+ifdef USER
+ifdef MODELNAME
+ifdef BENCHMARK
+ifdef LANGPAIR
+ifdef FILE
+ifneq ($(wildcard ${FILE}),)
+
+SRC           := ${firstword ${subst -, ,${LANGPAIR}}}
+SYSTEM_OUTPUT := models/work/${USER}/${MODELNAME}/${BENCHMARK}.${LANGPAIR}.output
+TESTSET_SRC   := OPUS-MT-testsets/testsets/${LANGPAIR}/${BENCHMARK}.${SRC}
+MODEL_YAML    := models/${USER}/${MODELNAME}.yaml
+
+ifneq ($(wildcard ${TESTSET_SRC}),)
+
+eval:
+	mkdir -p models/${USER}
+ifneq ($(wildcard ${MODEL_YAML}),)
+	grep '^language-pairs: ' ${MODEL_YAML} |\
+	cut -f2- -d: | sed 's/^/${LANGPAIR}/' | \
+	tr ' ' "\n" | sort -u | tr "\n" ' '                        > ${MODEL_YAML}.langpairs
+	grep -v '^language-pairs: ' ${MODEL_YAML}                  > ${MODEL_YAML}.tmp
+	cat ${MODEL_YAML}.langpairs | sed 's/^/language-pairs: /' >> ${MODEL_YAML}.tmp
+	mv ${MODEL_YAML}.tmp ${MODEL_YAML}
+ifdef WEBSITE
+	grep -v '^website: ' ${MODEL_YAML}                         > ${MODEL_YAML}.tmp
+	echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}.tmp
+	mv ${MODEL_YAML}.tmp ${MODEL_YAML}
+endif
+else
+	echo "language-pairs: ${LANGPAIR}"                         > ${MODEL_YAML}
+ifdef WEBSITE
+	echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}
+endif
+endif
+	if [ `cat ${FILE} | wc -l` -eq `cat ${TESTSET_SRC} | wc -l` ]; then \
+	  mkdir -p models/work/${USER}/${MODELNAME}; \
+	  cp ${FILE} ${SYSTEM_OUTPUT}; \
+	  ${MAKE} USER_CONTRIBUTED_FILE=${SYSTEM_OUTPUT} eval-userfile; \
+	else \
+	  echo "${FILE} and ${TESTSET_SRC} have different lengths"; \
+	fi
+
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+
+#--------------------------------------------------
+
+
+
 USER_CONTRIBUTED_FILES  := $(shell find models -type f -name '*.output')
 USER_CONTRIBUTED_FILE   ?= $(firstword ${USER_CONTRIBUTED_FILES})
-CONTRIBUTED_USERNAME    := $(word 5,$(subst /, ,${USER_CONTRIBUTED_FILE}))
-CONTRIBUTED_MODEL       := $(patsubst models/work/${CONTRIBUTED_USERNAME}/%/,%,\
-				$(dir ${USER_CONTRIBUTED_FILE}))
+CONTRIBUTED_USERNAME    := $(word 3,$(subst /, ,${USER_CONTRIBUTED_FILE}))
+CONTRIBUTED_MODEL       := $(word 4,$(subst /, ,${USER_CONTRIBUTED_FILE}))
 CONTRIBUTED_MODEL_YAML  := models/${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}.yml
 CONTRIBUTED_TRANSLATION := $(notdir ${USER_CONTRIBUTED_FILE})
 CONTRIBUTED_TRANSLATION_TESTSET  := $(basename $(basename ${CONTRIBUTED_TRANSLATION}))
@@ -80,20 +159,13 @@ endif
 
 
 ## evaluate a new user-contributed file
-## register the scores
-## update user-score leaderboards
+## - register the scores
+## - update user-score leaderboards
 ##
-## NOTE: don't allow concurrent jobs because of racing conditions!
+## NOTE: don't allow concurrent jobs because of potential racing conditions!
 
 eval-userfile:
 ifneq ($(wildcard ${USER_CONTRIBUTED_FILE}),)
-	@echo ${CONTRIBUTED_MODEL_YAML}
-	@echo ${USER_CONTRIBUTED_FILE}
-	@echo ${CONTRIBUTED_USERNAME}
-	@echo ${CONTRIBUTED_MODEL}
-	@echo ${CONTRIBUTED_TRANSLATION_TESTSET}
-	@echo ${CONTRIBUTED_TRANSLATION_LANGPAIR}
-	@echo ${CONTRIBUTED_MODEL_WEBSITE}
 	${MAKE} -C models \
 		USER_NAME='${CONTRIBUTED_USERNAME}' \
 		USER_MODEL='${CONTRIBUTED_MODEL}' \
@@ -102,9 +174,13 @@ ifneq ($(wildcard ${USER_CONTRIBUTED_FILE}),)
 		MODEL_URL='${CONTRIBUTED_MODEL_WEBSITE}' \
 	all
 	rm -f ${USER_CONTRIBUTED_FILE}
-	${MAKE} -C models MODEL='${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}' \
-	register
-	${MAKE} -s all-contributed
+	${MAKE} -C models MODEL='${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}' register
+	find scores/${CONTRIBUTED_TRANSLATION_LANGPAIR}/${CONTRIBUTED_TRANSLATION_TESTSET} \
+		-name '*unsorted*' -empty -delete
+	${MAKE} LANGPAIR='${CONTRIBUTED_TRANSLATION_LANGPAIR}' \
+		UPDATE_ALL_LEADERBOARDS=0 update-leaderboards
+	find scores/${CONTRIBUTED_TRANSLATION_LANGPAIR}/${CONTRIBUTED_TRANSLATION_TESTSET} \
+		-name '*.txt' | grep -v unsorted | xargs git add
 else
 	@echo "No file to be evaluated!"
 endif
@@ -162,6 +238,13 @@ all-model-lists:
 	done
 
 
+.PHONY: update-leaderboard
+update-leaderboard: ${UPDATE_LEADERBOARDS}
+	echo "extract top/avg scores for $$l"; \
+	${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 top-scores
+	${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 avg-scores
+	${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 model-list
+
 
 # .PHONY: update-leaderboards
 # update-leaderboards: langpair-scores
@@ -215,22 +298,16 @@ sort-updated-leaderboards refresh-leaderboards:
 
 
 
-released-models.txt: scores
-	find scores/ -name 'bleu-scores.txt' | xargs cat | cut -f2 | sort -u > $@
-
-release-history.txt: released-models.txt
-	cat $< | rev | cut -f3 -d'/' | rev > $@.pkg
-	cat $< | rev | cut -f2 -d'/' | rev > $@.langpair
-	cat $< | rev | cut -f1 -d'/' | rev > $@.model
-	cat $< | sed 's/^.*\([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\)\.zip$$/\1/' > $@.date
-	paste $@.date $@.pkg $@.langpair $@.model | sort -r | sed 's/\.zip$$//' > $@
-	rm -f $@.langpair $@.model $@.date $@.pkg
 
 .PHONY: model-list
 model-list: scores/${LANGPAIR}/model-list.txt
 
 scores/${LANGPAIR}/model-list.txt: ${METRICFILES}
 	find ${dir $@} -name 'bleu-scores.txt' | xargs cut -f2 | sort -u > $@
+
+released-models.txt: scores
+	find scores -name 'bleu-scores.txt' | xargs cat | cut -f2 | sort -u > $@
+
 
 .PHONY: top-score-file top-scores
 top-score-file: scores/${LANGPAIR}/top-${METRIC}-scores.txt

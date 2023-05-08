@@ -83,7 +83,9 @@ eval-model-files: ${MODEL_EVAL_SCORES}
 
 .PHONY: update-eval-files
 update-eval-files:
-	mv -f ${MODEL_SCORES} ${MODEL_SCORES}.${TODAY}
+	if [ -e ${MODEL_SCORES} ]; then \
+	  mv -f ${MODEL_SCORES} ${MODEL_SCORES}.${TODAY}; \
+	fi
 	${MAKE} eval-model-files
 
 .PHONY: eval
@@ -119,23 +121,22 @@ eval-testsets: ${TRANSLATED_BENCHMARKS} ${EVALUATED_BENCHMARKS}
 
 ## don't make the temporary output a pre-requisite
 ## (somehow it does not always work to skip creating it if the target already exists)
-#
-# ${MODEL_DIR}/%.${LANGPAIR}.compare:	${TESTSET_DIR}/%.${SRC} \
-#					${TESTSET_DIR}/%.${TRG} \
-#					${WORK_DIR}/%.${LANGPAIR}.output
-#	@mkdir -p ${dir $@}
-#	if [ -s $(word 3,$^) ]; then \
-#	  paste -d "\n" $^ | sed 'n;n;G;' > $@; \
-#	fi
 
-
-${MODEL_DIR}/%.${LANGPAIR}.compare: ${TESTSET_DIR}/%.${SRC} ${TESTSET_DIR}/%.${TRG}
+${MODEL_DIR}/%.${LANGPAIR}.compare:	${TESTSET_DIR}/%.${SRC} \
+					${TESTSET_DIR}/%.${TRG} \
+					${WORK_DIR}/%.${LANGPAIR}.output
 	@mkdir -p ${dir $@}
-	@${MAKE} $(patsubst ${MODEL_DIR}/%.${LANGPAIR}.compare,${WORK_DIR}/%.${LANGPAIR}.output,$@)
-	@if [ -s $(patsubst ${MODEL_DIR}/%.${LANGPAIR}.compare,${WORK_DIR}/%.${LANGPAIR}.output,$@) ]; then \
-	  paste -d "\n" $^ $(patsubst ${MODEL_DIR}/%.${LANGPAIR}.compare,${WORK_DIR}/%.${LANGPAIR}.output,$@) |\
-	  sed 'n;n;G;' > $@; \
+	if [ -s $(word 3,$^) ]; then \
+	  paste -d "\n" $^ | sed 'n;n;G;' > $@; \
 	fi
+
+
+#${MODEL_DIR}/%.${LANGPAIR}.compare: ${TESTSET_DIR}/%.${SRC} ${TESTSET_DIR}/%.${TRG}
+#	@mkdir -p ${dir $@}
+#	@if [ -s $(patsubst ${MODEL_DIR}/%.${LANGPAIR}.compare,${WORK_DIR}/%.${LANGPAIR}.output,$@) ]; then \
+#	  paste -d "\n" $^ $(patsubst ${MODEL_DIR}/%.${LANGPAIR}.compare,${WORK_DIR}/%.${LANGPAIR}.output,$@) |\
+#	  sed 'n;n;G;' > $@; \
+#	fi
 
 
 ## concatenate all scores into one file

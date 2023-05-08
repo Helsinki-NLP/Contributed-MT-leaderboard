@@ -1,2 +1,3 @@
 flores200-devtest	49.8	facebook/nllb-200-54.5B
 newstest2014	0.1	facebook/nllb-200-54.5B
+newstest2020	43.7	testuser2/testmodel2

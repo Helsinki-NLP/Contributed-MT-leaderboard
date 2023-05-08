@@ -1,22 +1,98 @@
 # -*-makefile-*-
 #
-# register scores in leaderboards
-#  - create files to be added for each language pair and benchmark that we need to update
-#  - files have extension 'unsorted.txt' and need to be merged with the leaderbaord file
-#  - check top-level makefile about recipes to merge/update
-#  - a flag will be created to mark that scores are registered
+# template for evaluating user-contributed translations
 #
+# What you need to do is
+#
+#   * set the model-specific variables MODELS, MODEL_LANGPAIRS, MODEL_URL
+#   * place the translations into a temporary work directory
+#   * run make with appropriate settings
+#
+#-----------------------------------------------------------------------------
+#
+# Example: evaluate a user contributed translation of flores101-dev from English to Danish
+#          for a user <username> and model <modelname>
+#
+#   mkdir -p work/username/modelname
+#   cp translation-file.txt work/username/modelname/flores101-devtest.eng-dan.output
+#
+#   make USER_NAME=username USER_MODEL=modelname \
+#        TESTSETS=flores101-devtest LANGPAIR=eng-dan \
+#   eval
+#
+#
+# After evaluating all benchmarks, create model score files with:
+#
+#   make USER_NAME=username USER_MODEL=modelname \
+#        MODEL_URL=http://path/to/my/wonderful-model \
+#   eval-model-files
+#
+#
+# and finally pack everything together:
+#
+#   make USER_NAME=username USER_MODEL=modelname pack-model-scores
+#
+#-----------------------------------------------------------------------------
+
 
 PWD      := ${shell pwd}
 REPOHOME := ${PWD}/../
 
+METRICS     := bleu spbleu chrf chrf++
 ALL_SOURCES := $(filter-out lib,$(notdir ${shell find . -maxdepth 1 -mindepth 2 -type d}))
 
-SOURCE      ?= facebook
-MODEL_HOME  ?= ${SOURCE}
-MODEL       ?= nllb-200-54.5B
+
+## specify all models
+
+MODEL_HOME  := ${PWD}
+USER_NAME   ?= testuser
+USER_MODEL  ?= testmodel
+MODELS      := ${USER_NAME}/${USER_MODEL}
+MODEL       ?= $(firstword ${MODELS})
+
+
+## MODEL_URL: location of the public model (to be stored in the score files)
+## MODEL_EVAL_URL: location of the storage space for the evaluation output files
+
+MODEL_URL       := https://location.of.my.model/storage/${MODEL}
+MODEL_STORAGE   := https://object.pouta.csc.fi/Contributed-MT-models
+MODEL_EVAL_URL  := ${MODEL_STORAGE}/${MODEL}.eval.zip
+
+SKIP_NEW_EVALUATION := 1
+
+.PHONY: all
+all:
+	${MAKE} -s fetch-model-scores
+	${MAKE} -s eval
+	${MAKE} -s update-eval-files
+	${MAKE} -s pack-model-scores
+
+
+
+## all kinds of common evaluation recipes and variables
+## no changes needed (hopefully)
+
 
 include lib/config.mk
+include lib/eval.mk
+
+.PHONY: fetch-model
+fetch-model:
+	@echo "no model to fetch"
+
+
+##----------------------------------------------------------------------
+## targets for score registration and file upload
+##
+##    make register
+##    make upload
+##
+##    make register-all
+##    make upload-all
+##
+## ...
+##----------------------------------------------------------------------
+
 
 
 ## scores that need to be registered (stored in temporary score files)
@@ -41,9 +117,6 @@ MODEL_EVALZIPS  ?= $(patsubst %,%.eval.zip,$(sort $(basename ${SCOREFILES:.txt=}
 SCOREFILES_DONE := ${SCOREFILES:.txt=.registered}
 
 
-.PHONY: all
-all: register-all
-	${MAKE} upload-all
 
 .PHONY: register-all
 register-all:
@@ -75,9 +148,8 @@ endif
 
 ${MODEL_HOME}/%-scores.registered: ${MODEL_HOME}/%-scores.txt
 	@echo "register scores from ${patsubst ${MODEL_HOME}/%,%,$<}"
-	@cat $< | perl -e 'while (<>){ chomp; @a=split(/\t/); $$a[1]=~s/^(news.*)\-[a-z]{4}/$$1/; system "mkdir -p ${LEADERBOARD_DIR}/$$a[0]/$$a[1]"; open C,">>${LEADERBOARD_DIR}/$$a[0]/$$a[1]/$(patsubst .%,%,$(suffix $(basename $<))).$(subst /,.,${patsubst ${MODEL_HOME}/%,%,$<}).unsorted.txt"; $$m="$(shell cut -f5 $(basename $(basename $<)).scores.txt | head -1)";if ($$a[2] && $$m){print C "$$a[2]\t$$m\n";} close C; }'
+	@cat $< | perl -e 'while (<>){ chomp; @a=split(/\t/); $$a[1]=~s/^(news.*)\-[a-z]{4}/$$1/; system "mkdir -p ${LEADERBOARD_DIR}/$$a[0]/$$a[1]"; open C,">>${LEADERBOARD_DIR}/$$a[0]/$$a[1]/$(patsubst .%,%,$(suffix $(basename $<))).$(subst /,.,${patsubst ${MODEL_HOME}/%,%,$<}).unsorted.txt"; $$m="$(basename $(basename $(patsubst ${MODEL_HOME}/%,%,$<)))";if ($$a[2] && $$m){print C "$$a[2]\t$$m\n";} close C; }'
 	@touch $@
-
 
 
 
