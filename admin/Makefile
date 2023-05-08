@@ -30,6 +30,7 @@ else ifneq (${MODEL},)
   LANGPAIR         ?= $(shell cut -f1 ../models/${MODEL}.scores.txt | sort -u)
   TOPSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/top-*.txt))
   MODELSCORE_FILES := $(wildcard ../models/${MODEL}.*.txt)
+  SCORE_FILES      := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/*/*.txt))
 else
   TOPSCORE_FILES   := $(wildcard ../scores/*/top-*.txt)
   MODELSCORE_FILES := $(shell find ../models -name '*.txt')
@@ -63,7 +64,8 @@ print-affected-files:
 .PHONY: remove-model
 remove-model:
 ifneq (${MODEL},)
-	${MAKE} REMOVE_PATTERN='	${BENCHMARK}$$' renove-from-topscores
+	${MAKE} REMOVE_PATTERN='	${MODEL}$$' renove-from-topscores
+	${MAKE} REMOVE_PATTERN='	${MODEL}$$' renove-from-scores
 	rm -f models/${MODEL}.*
 endif
 
