@@ -1,14 +1,16 @@
 # -*-makefile-*-
 #
-#  make MODEL=modelname remove-model
-#  make BENCHMARK=testset remove-benchmark
-#  make MODEL=modelname BENCHMARK=testset remove-benchmark
+#--------------------------------------------------------------------
+#  make remove MODEL=modelname
+#  make remove BENCHMARK=testset
+#  make remove MODEL=modelname BENCHMARK=testset
 #
-#  make BENCHMARK=testset LANGPAIR=langpair remove-benchmark
-#  make MODEL=modelname BENCHMARK=testset LANGPAIR=langpair remove-benchmark
+#  make remove BENCHMARK=testset LANGPAIR=langpair
+#  make remove MODEL=modelname BENCHMARK=testset LANGPAIR=langpair
 #
 #  make remove-devsets
 #  make cleanup
+#--------------------------------------------------------------------
 
 
 SPACE := $(empty) $(empty)
@@ -39,29 +41,40 @@ SPACE := $(empty) $(empty)
 ifneq (${BENCHMARK},)
   LANGPAIR         ?= $(shell grep '^${BENCHMARK}	' ../scores/benchmarks.txt | cut -f2)
   TOPSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/top-*.txt))
+  AVGSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/avg-*.txt))
   SCORE_FILE_DIRS  := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/${BENCHMARK}))
 ifneq (${MODEL},)
   MODELSCORE_FILES := $(wildcard ../models/${MODEL}.*.txt)
   SCORE_FILES      := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/${BENCHMARK}/*.txt))
-  EVALZIP_FILES    := $(wildcard ../models/${MODEL}.eval.zip)
+  EVALZIP_FILES    := ../models/${MODEL}.eval.zip
+  EVAL_FILES       := $(foreach langpair,$(LANGPAIR),../models/$(langpair)/${MODEL}.eval.zip/${BENCHMARK}.${langpair}.*)
 else
   MODELS           := $(sort $(foreach langpair,$(LANGPAIR),$(shell cat ../scores/$(langpair)/model-list.txt)))
   MODELSCORE_FILES := $(foreach model,$(MODELS),$(wildcard ../models/$(model).*.txt))
+  EVALZIP_FILES    := $(foreach model,$(MODELS),../models/$(model).eval.zip)
+  EVAL_FILES       := $(foreach model,${MODELS},$(foreach langpair,$(LANGPAIR),../models/${model}.eval.zip/${BENCHMARK}.${langpair}.*))
 endif
 else ifneq (${MODEL},)
+ifneq (${LANGPAIR},)
+  EVAL_FILES       := $(foreach langpair,$(LANGPAIR),$(wildcard ../models/${MODEL}.eval.zip/*.${langpair}.*))
+endif
   LANGPAIR         ?= $(shell cut -f1 ../models/${MODEL}.scores.txt | sort -u)
   TOPSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/top-*.txt))
+  AVGSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/avg-*.txt))
   MODELSCORE_FILES := $(wildcard ../models/${MODEL}.*.txt)
   SCORE_FILES      := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/*/*.txt))
-  EVALZIP_FILES    := $(wildcard ../models/${MODEL}.eval.zip)
+  EVALZIP_FILES    := ../models/${MODEL}.eval.zip
 else ifneq (${LANGPAIR},)
   TOPSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/top-*.txt))
+  AVGSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/avg-*.txt))
   SCORE_FILE_DIRS  := $(patsubst %,../scores/%,$(LANGPAIR))
   MODELS           := $(sort $(foreach langpair,$(LANGPAIR),$(shell cat ../scores/$(langpair)/model-list.txt)))
   MODELSCORE_FILES := $(foreach model,$(MODELS),$(wildcard ../models/$(model).*.txt))
-  EVALZIP_FILES    := $(foreach model,$(MODELS),$(model).eval.zip)
+  EVALZIP_FILES    := $(foreach model,$(MODELS),../models/$(model).eval.zip)
+  EVAL_FILES       := $(foreach model,${MODELS},$(foreach langpair,$(LANGPAIR),../models/${model}.eval.zip/*.${langpair}.*))
 else
   TOPSCORE_FILES   := $(wildcard ../scores/*/top-*.txt)
+  AVGSCORE_FILES   := $(wildcard ../scores/*/avg-*.txt)
   MODELSCORE_FILES := $(shell find ../models -name '*.txt')
   EVALZIP_FILES    := $(shell find ../models -name '*.eval.zip')
 endif
@@ -78,6 +91,7 @@ MODELSCORE_FILES_REMOVE := $(patsubst %.txt,%.remove,${MODELSCORE_FILES})
 
 
 
+
 ## print the files that will be affected by a remove command
 
 print-affected-files:
@@ -87,18 +101,29 @@ print-affected-files:
 	@echo "${SCORE_FILES}" | tr ' ' "\n"
 	@echo "------------top-score-files--------------"
 	@echo "${TOPSCORE_FILES}" | tr ' ' "\n"
+	@echo "------------avg-score-files--------------"
+	@echo "${AVGSCORE_FILES}" | tr ' ' "\n"
 	@echo "------------model-files------------------"
 	@echo "${MODELSCORE_FILES}" | tr ' ' "\n"
 	@echo "------------eval-file-zips---------------"
 	@echo "${EVALZIP_FILES}" | tr ' ' "\n"
+	@echo "------------eval-files-------------------"
+	@echo "${EVAL_FILES}" | tr ' ' "\n"
+
 
 
 .PHONY: remove
 
 ifneq (${BENCHMARK},)
 remove: remove-benchmark
+	${MAKE} cleanup
+	${MAKE} average-score-files
+	${MAKE} -C .. scores/langpairs.txt user-scores/benchmarks.txt
 else ifneq (${MODEL},)
 remove: remove-model
+	${MAKE} cleanup
+	${MAKE} average-score-files
+	${MAKE} -C .. scores/langpairs.txt user-scores/benchmarks.txt
 endif
 
 
@@ -128,10 +153,12 @@ ifneq (${MODEL},)
 	${MAKE} REMOVE_PATTERN='^${BENCHMARK}<TAB>.*<TAB>${MODEL}<EOS>' remove-from-topscores
 	${MAKE} REMOVE_PATTERN='<TAB>${BENCHMARK}<TAB>' remove-from-modelscores
 	${MAKE} REMOVE_PATTERN='<TAB>${MODEL}<EOS>' remove-from-scores
+	${MAKE} update-zip-files
 else
 	${MAKE} REMOVE_PATTERN='^${BENCHMARK}<TAB>' remove-from-topscores
 	${MAKE} REMOVE_PATTERN='<TAB>${BENCHMARK}<TAB>' remove-from-modelscores
 	${MAKE} remove-benchmark_scores
+	${MAKE} update-zip-files
 endif
 endif
 
@@ -194,6 +221,15 @@ ifneq (${REMOVE_PATTERN_UNESCAPED},)
 	@touch $@
 endif
 
+average-score-files: ${AVGSCORE_FILES}
+
+${AVGSCORE_FILES}: ${TOPSCORE_FILES}
+	${MAKE} -C .. LANGPAIR=$(word 3,$(subst /, ,$@)) avg-scores 
+	${MAKE} -C .. LANGPAIR=$(word 3,$(subst /, ,$@)) model-list
+
+${TOPSCORE_FILES}:
+	${MAKE} -C .. LANGPAIR=$(word 3,$(subst /, ,$@)) top-scores
+
 
 .PHONY: remove-benchmark_scores
 remove-benchmark_scores: ${SCORE_FILE_DIRS_REMOVE}
@@ -201,8 +237,26 @@ remove-benchmark_scores: ${SCORE_FILE_DIRS_REMOVE}
 ${SCORE_FILE_DIRS_REMOVE}: %.remove-dir: %
 	mv $< $@
 
+
 ##-------------------------------------------------
-## cleanuo
+## update eval zip files if necessary
+##-------------------------------------------------
+
+update-zip-files: ${EVALZIP_FILES}
+
+${EVALZIP_FILES}: %.eval.zip: %.scores.txt
+	if [ ! -e $@ ]; then \
+	  ${MAKE} -C ../models $(patsubst ../models/%,%,$@); \
+	fi
+	${MAKE} remove-eval-files
+
+remove-eval-files: ${EVAL_FILES}
+
+${EVAL_FILES}:
+	-zip -d $(patsubst %/,%,$(dir $@)) $(notdir $@)
+
+##-------------------------------------------------
+## cleanup
 ##-------------------------------------------------
 
 .PHONY: cleanup

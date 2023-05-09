@@ -1,2 +1,1 @@
 flores200-devtest	56.2	facebook/nllb-200-54.5B
-newstest2014	0.4	facebook/nllb-200-54.5B

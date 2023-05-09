@@ -8892,7 +8892,6 @@ deu-dyu	flores200-devtest	1.5
 deu-dzo	flores200-devtest	0.4
 deu-ell	flores200-devtest	22.7
 deu-eng	flores200-devtest	45.8
-deu-eng	newstest2014	0.1
 deu-epo	flores200-devtest	27.6
 deu-est	flores200-devtest	22.3
 deu-eus	flores200-devtest	13.4
@@ -9895,7 +9894,6 @@ eng-crh	flores200-devtest	16.8
 eng-cym	flores200-devtest	51.6
 eng-dan	flores200-devtest	44.5
 eng-deu	flores200-devtest	39.6
-eng-deu	newstest2014	0.1
 eng-dik	flores200-devtest	3.8
 eng-dyu	flores200-devtest	1.7
 eng-dzo	flores200-devtest	0.6
@@ -9910,7 +9908,6 @@ eng-fij	flores200-devtest	20.1
 eng-fin	flores200-devtest	26.2
 eng-fon	flores200-devtest	3.1
 eng-fra	flores200-devtest	51.4
-eng-fra	newstest2014	0.1
 eng-fur	flores200-devtest	34.0
 eng-fuv	flores200-devtest	3.9
 eng-gaz	flores200-devtest	5.4
@@ -9923,7 +9920,6 @@ eng-hat	flores200-devtest	25.1
 eng-hau	flores200-devtest	28.8
 eng-heb	flores200-devtest	34.7
 eng-hin	flores200-devtest	34.6
-eng-hin	newstest2014	0.2
 eng-hne	flores200-devtest	27.1
 eng-hrv	flores200-devtest	31.9
 eng-hun	flores200-devtest	27.6
@@ -11719,7 +11715,6 @@ fra-dyu	flores200-devtest	1.7
 fra-dzo	flores200-devtest	0.4
 fra-ell	flores200-devtest	22.5
 fra-eng	flores200-devtest	47.9
-fra-eng	newstest2014	0.1
 fra-epo	flores200-devtest	27.8
 fra-est	flores200-devtest	20.9
 fra-eus	flores200-devtest	14.0
@@ -14133,7 +14128,6 @@ hin-dyu	flores200-devtest	1.4
 hin-dzo	flores200-devtest	0.5
 hin-ell	flores200-devtest	20.3
 hin-eng	flores200-devtest	44.4
-hin-eng	newstest2014	0.1
 hin-epo	flores200-devtest	19.7
 hin-est	flores200-devtest	19.2
 hin-eus	flores200-devtest	11.7
