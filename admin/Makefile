@@ -13,8 +13,28 @@
 
 SPACE := $(empty) $(empty)
 
-## all top-score files and model score files
-## that may need an update
+
+#--------------------------------------------------------------------
+# find the files that need to be modified / removed
+#
+#   if BENCHMARK is set (e.g. to flores200-devtest)
+#      - all top-score files for language pairs that exist for this benchmark
+#        (unless LANGPAIR is set to specific selected language pairs)
+#      - all benchmark-specific sub-directories in the leaderboard
+#      - all model score files (need to test whether they have been tested with this benchmark)
+#        TODO: should restrict to models that can handle that language pair!
+#   if BENCHMARK and MODEL are set
+#      - all top-score files for language pairs that exist for this benchmark
+#        (unless LANGPAIR is set to specific selected language pairs)
+#      - all score files of the selected benchmark (need to remove the entry for the selected model)
+#      - only model score files of that model
+#   if MODEL is set
+#      - all score files of language pairs that the model can handle
+#      - all model score files
+#   otherwise:
+#      - all top score files
+#      - all model score files
+#--------------------------------------------------------------------
 
 ifneq (${BENCHMARK},)
   LANGPAIR         ?= $(shell grep '^${BENCHMARK}	' ../scores/benchmarks.txt | cut -f2)
@@ -23,17 +43,27 @@ ifneq (${BENCHMARK},)
 ifneq (${MODEL},)
   MODELSCORE_FILES := $(wildcard ../models/${MODEL}.*.txt)
   SCORE_FILES      := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/${BENCHMARK}/*.txt))
+  EVALZIP_FILES    := $(wildcard ../models/${MODEL}.eval.zip)
 else
-  MODELSCORE_FILES := $(shell find ../models -name '*.txt')
+  MODELS           := $(sort $(foreach langpair,$(LANGPAIR),$(shell cat ../scores/$(langpair)/model-list.txt)))
+  MODELSCORE_FILES := $(foreach model,$(MODELS),$(wildcard ../models/$(model).*.txt))
 endif
 else ifneq (${MODEL},)
   LANGPAIR         ?= $(shell cut -f1 ../models/${MODEL}.scores.txt | sort -u)
   TOPSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/top-*.txt))
   MODELSCORE_FILES := $(wildcard ../models/${MODEL}.*.txt)
   SCORE_FILES      := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/*/*.txt))
+  EVALZIP_FILES    := $(wildcard ../models/${MODEL}.eval.zip)
+else ifneq (${LANGPAIR},)
+  TOPSCORE_FILES   := $(foreach langpair,$(LANGPAIR),$(wildcard ../scores/$(langpair)/top-*.txt))
+  SCORE_FILE_DIRS  := $(patsubst %,../scores/%,$(LANGPAIR))
+  MODELS           := $(sort $(foreach langpair,$(LANGPAIR),$(shell cat ../scores/$(langpair)/model-list.txt)))
+  MODELSCORE_FILES := $(foreach model,$(MODELS),$(wildcard ../models/$(model).*.txt))
+  EVALZIP_FILES    := $(foreach model,$(MODELS),$(model).eval.zip)
 else
   TOPSCORE_FILES   := $(wildcard ../scores/*/top-*.txt)
   MODELSCORE_FILES := $(shell find ../models -name '*.txt')
+  EVALZIP_FILES    := $(shell find ../models -name '*.eval.zip')
 endif
 
 
@@ -47,15 +77,32 @@ TOPSCORE_FILES_REMOVE   := $(patsubst %.txt,%.remove,${TOPSCORE_FILES})
 MODELSCORE_FILES_REMOVE := $(patsubst %.txt,%.remove,${MODELSCORE_FILES})
 
 
-print-affected-files:
-	@echo "${SCORE_FILE_DIRS}" | tr ' ' "\n"
-	@echo "------------------------------"
-	@echo "${SCORE_FILES}" | tr ' ' "\n"
-	@echo "------------------------------"
-	@echo "${TOPSCORE_FILES}" | tr ' ' "\n"
-	@echo "------------------------------"
-	@echo "${MODELSCORE_FILES}" | tr ' ' "\n"
 
+## print the files that will be affected by a remove command
+
+print-affected-files:
+	@echo "------------score-file-dirs:-------------"
+	@echo "${SCORE_FILE_DIRS}" | tr ' ' "\n"
+	@echo "------------score-files------------------"
+	@echo "${SCORE_FILES}" | tr ' ' "\n"
+	@echo "------------top-score-files--------------"
+	@echo "${TOPSCORE_FILES}" | tr ' ' "\n"
+	@echo "------------model-files------------------"
+	@echo "${MODELSCORE_FILES}" | tr ' ' "\n"
+	@echo "------------eval-file-zips---------------"
+	@echo "${EVALZIP_FILES}" | tr ' ' "\n"
+
+
+.PHONY: remove
+
+ifneq (${BENCHMARK},)
+remove: remove-benchmark
+else ifneq (${MODEL},)
+remove: remove-model
+endif
+
+
+remove:
 
 ##-----------------------------------------------------------------------------
 ## remove all info about a specific model
@@ -64,9 +111,9 @@ print-affected-files:
 .PHONY: remove-model
 remove-model:
 ifneq (${MODEL},)
-	${MAKE} REMOVE_PATTERN='	${MODEL}$$' renove-from-topscores
-	${MAKE} REMOVE_PATTERN='	${MODEL}$$' renove-from-scores
-	rm -f models/${MODEL}.*
+	${MAKE} REMOVE_PATTERN='<TAB>${MODEL}<EOS>' remove-from-topscores
+	${MAKE} REMOVE_PATTERN='<TAB>${MODEL}<EOS>' remove-from-scores
+	rm -f ../models/${MODEL}.*
 endif
 
 ##-----------------------------------------------------------------------------
@@ -78,26 +125,26 @@ endif
 remove-benchmark:
 ifneq (${BENCHMARK},)
 ifneq (${MODEL},)
-	${MAKE} REMOVE_PATTERN='^${BENCHMARK}	.*	${MODEL}$$' renove-from-topscores
-	${MAKE} REMOVE_PATTERN='	${BENCHMARK}	' renove-from-modelscores
-	${MAKE} REMOVE_PATTERN='	${MODEL}$$' renove-from-scores
+	${MAKE} REMOVE_PATTERN='^${BENCHMARK}<TAB>.*<TAB>${MODEL}<EOS>' remove-from-topscores
+	${MAKE} REMOVE_PATTERN='<TAB>${BENCHMARK}<TAB>' remove-from-modelscores
+	${MAKE} REMOVE_PATTERN='<TAB>${MODEL}<EOS>' remove-from-scores
 else
-	${MAKE} REMOVE_PATTERN='^${BENCHMARK}	' renove-from-topscores
-	${MAKE} REMOVE_PATTERN='	${BENCHMARK}	' renove-from-modelscores
-	${MAKE} renove-benchmark_scores
+	${MAKE} REMOVE_PATTERN='^${BENCHMARK}<TAB>' remove-from-topscores
+	${MAKE} REMOVE_PATTERN='<TAB>${BENCHMARK}<TAB>' remove-from-modelscores
+	${MAKE} remove-benchmark_scores
 endif
 endif
 
 ##-----------------------------------------------------------------------------
-## renove dev sets from the leaderboard
+## remove dev sets from the leaderboard
 ##-----------------------------------------------------------------------------
 
 DEVSETS := $(sort $(shell cut -f1 ../scores/benchmarks.txt | grep dev | grep -v devtest))
 
 .PHONY: remove-devsets
 remove-devsets:
-	${MAKE} REMOVE_PATTERN='^($(sort $(subst ${SPACE},|,${DEVSETS})))	' renove-from-topscores
-	${MAKE} REMOVE_PATTERN='	($(sort $(subst ${SPACE},|,${DEVSETS})))	' renove-from-modelscores
+	${MAKE} REMOVE_PATTERN='^($(sort $(subst ${SPACE},|,${DEVSETS})))<TAB>' remove-from-topscores
+	${MAKE} REMOVE_PATTERN='<TAB>($(sort $(subst ${SPACE},|,${DEVSETS})))<TAB>' remove-from-modelscores
 	@for d in ${DEVSETS}; do \
 	  echo "delete $$d"; \
 	  find ../scores/ -maxdepth 2 -mindepth 1 -name $$d -exec rm -fr {} \; ; \
@@ -108,8 +155,7 @@ remove-devsets:
 ## remove all evaluation files that belong to development sets
 ## and put them into a separate zip file
 
-EVALZIP_FILES := $(shell find ../models -name '*.eval.zip')
-EVALZIP_DEV   := $(patsubst %.eval.zip,%.deveval.zip,${EVALZIP_FILES})
+EVALZIP_DEV := $(patsubst %.eval.zip,%.deveval.zip,${EVALZIP_FILES})
 
 .PHONY: remove-devevalfiles
 remove-devevalfiles: ${EVALZIP_DEV}
@@ -134,21 +180,23 @@ ${EVALZIP_DEV}: %.deveval.zip: %.eval.zip
 ## generic targets to remove something
 ##-------------------------------------------------
 
-.PHONY: remove-from-scores remove-from-topscores renove-from-modelscores
-renove-from-scores: ${SCORE_FILES_REMOVE}
-renove-from-topscores: ${TOPSCORE_FILES_REMOVE}
-renove-from-modelscores: ${MODELSCORE_FILES_REMOVE}
+.PHONY: remove-from-scores remove-from-topscores remove-from-modelscores
+remove-from-scores: ${SCORE_FILES_REMOVE}
+remove-from-topscores: ${TOPSCORE_FILES_REMOVE}
+remove-from-modelscores: ${MODELSCORE_FILES_REMOVE}
+
+REMOVE_PATTERN_UNESCAPED := $(subst <EOS>,$$,$(subst <TAB>,	,${REMOVE_PATTERN}))
 
 ${SCORE_FILES_REMOVE} ${TOPSCORE_FILES_REMOVE} ${MODELSCORE_FILES_REMOVE}: %.remove: %.txt
-ifneq (${REMOVE_PATTERN},)
-	mv -f $< $@
-	egrep -v '${REMOVE_PATTERN}' < $@ > $<
-	touch $@
+ifneq (${REMOVE_PATTERN_UNESCAPED},)
+	@mv -f $< $@
+	egrep -v '${REMOVE_PATTERN_UNESCAPED}' < $@ > $< || exit 1
+	@touch $@
 endif
 
 
-.PHONY: renove-benchmark_scores
-renove-benchmark_scores: ${SCORE_FILE_DIRS_REMOVE}
+.PHONY: remove-benchmark_scores
+remove-benchmark_scores: ${SCORE_FILE_DIRS_REMOVE}
 
 ${SCORE_FILE_DIRS_REMOVE}: %.remove-dir: %
 	mv $< $@
