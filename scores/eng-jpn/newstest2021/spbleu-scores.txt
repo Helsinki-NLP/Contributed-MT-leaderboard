@@ -1,0 +1,14 @@
+31.0	wmt21/Facebook-AI
+29.1	wmt21/HuaweiTSC
+28.9	wmt21/NiuTrans
+28.7	wmt21/WeChat-AI
+26.0	wmt21/BUPT_rush
+24.9	wmt21/Online-B
+24.5	wmt21/Online-A
+24.4	wmt21/capitalmarvel
+23.6	wmt21/MiSS
+23.0	wmt21/ephemeraler
+22.8	wmt21/Online-Y
+22.2	wmt21/movelikeajaguar
+18.1	wmt21/Illini
+16.3	wmt21/Online-G

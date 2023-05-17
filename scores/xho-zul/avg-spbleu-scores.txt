@@ -1,2 +1,8 @@
 flores
 24.4	facebook/nllb-200-54.5B
+22.2	wmt21/HuaweiTSC
+22.1	wmt21/TRANSSION
+21.5	wmt21/GTCOM
+18.6	wmt21/MS-EgDC
+18.5	wmt21/FJDMATH
+7	wmt21/Online-G

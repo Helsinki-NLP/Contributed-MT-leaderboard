@@ -1,0 +1,4 @@
+deu-fra	newstest2021	0.59061
+eng-jpn	newstest2021	0.36618
+fra-deu	newstest2021	0.78781
+jpn-eng	newstest2021	0.48917

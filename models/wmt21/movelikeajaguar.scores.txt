@@ -1,0 +1,2 @@
+eng-jpn	newstest2021	0.33442	24.1		1000	34850
+jpn-eng	newstest2021	0.47616	21.2		1005	28731

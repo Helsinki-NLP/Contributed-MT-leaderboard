@@ -1,2 +1,16 @@
-flores
-0.58231	facebook/nllb-200-54.5B
+news
+0.53611	wmt21/Facebook-AI
+0.53484	wmt21/WeChat-AI
+0.53222	wmt21/NiuTrans
+0.52869	wmt21/MiSS
+0.52803	wmt21/HuaweiTSC
+0.52571	wmt21/Online-B
+0.5242	wmt21/XMU
+0.52136	wmt21/IIE-MT
+0.49562	wmt21/capitalmarvel
+0.48917	wmt21/Online-W
+0.48228	wmt21/Online-A
+0.47616	wmt21/movelikeajaguar
+0.476	wmt21/Online-G
+0.45483	wmt21/Online-Y
+0.45271	wmt21/Illini

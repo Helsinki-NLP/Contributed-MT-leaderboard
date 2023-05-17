@@ -1,2 +1,10 @@
 flores
+24.5	wmt21/TRANSSION
+24.2	wmt21/GTCOM
+24.1	wmt21/Online-B
 23.9	facebook/nllb-200-54.5B
+21.9	wmt21/HuaweiTSC
+21.7	wmt21/UEdin
+21.5	wmt21/Online-Y
+21.1	wmt21/Online-A
+16.7	wmt21/Online-G

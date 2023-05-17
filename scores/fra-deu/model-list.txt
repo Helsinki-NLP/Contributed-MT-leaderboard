@@ -1,1 +1,9 @@
 facebook/nllb-200-54.5B
+wmt21/LISN
+wmt21/Online-A
+wmt21/Online-B
+wmt21/Online-G
+wmt21/Online-W
+wmt21/Online-Y
+wmt21/P3AI
+wmt21/talp_upc

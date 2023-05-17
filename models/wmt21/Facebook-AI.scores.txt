@@ -1,0 +1,4 @@
+eng-isl	newstest2021	0.59599	33.3		1000	25233
+eng-jpn	newstest2021	0.40685	31.6		1000	34850
+isl-eng	newstest2021	0.62289	41.7		1000	22529
+jpn-eng	newstest2021	0.53611	27.7		1005	28731

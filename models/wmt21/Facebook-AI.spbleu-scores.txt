@@ -1,0 +1,4 @@
+eng-isl	newstest2021	42.6
+eng-jpn	newstest2021	31.0
+isl-eng	newstest2021	44.4
+jpn-eng	newstest2021	31.4

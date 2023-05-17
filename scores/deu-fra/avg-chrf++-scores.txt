@@ -1,2 +1,10 @@
-flores
-0.61406	facebook/nllb-200-54.5B
+news
+0.59533	wmt21/P3AI
+0.59228	wmt21/Online-A
+0.57943	wmt21/Manifold
+0.56164	wmt21/Online-W
+0.55632	wmt21/Online-B
+0.54831	wmt21/Online-G
+0.5425	wmt21/Online-Y
+0.5363	wmt21/LISN
+0.53529	wmt21/talp_upc

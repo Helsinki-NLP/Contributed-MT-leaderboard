@@ -1,0 +1,14 @@
+27.8	wmt21/WeChat-AI
+27.7	wmt21/Facebook-AI
+27.2	wmt21/Online-B
+27.0	wmt21/MiSS
+26.5	wmt21/HuaweiTSC
+25.8	wmt21/XMU
+25.4	wmt21/IIE-MT
+23.7	wmt21/capitalmarvel
+22.8	wmt21/Online-W
+21.2	wmt21/movelikeajaguar
+21.0	wmt21/Online-A
+20.6	wmt21/Online-G
+18.6	wmt21/Illini
+17.3	wmt21/Online-Y

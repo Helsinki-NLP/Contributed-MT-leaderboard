@@ -1,1 +1,15 @@
 facebook/nllb-200-54.5B
+wmt21/Facebook-AI
+wmt21/HuaweiTSC
+wmt21/IIE-MT
+wmt21/Illini
+wmt21/MiSS
+wmt21/Online-A
+wmt21/Online-B
+wmt21/Online-G
+wmt21/Online-W
+wmt21/Online-Y
+wmt21/WeChat-AI
+wmt21/XMU
+wmt21/capitalmarvel
+wmt21/movelikeajaguar

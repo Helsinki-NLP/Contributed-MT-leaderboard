@@ -1,0 +1,4 @@
+ben-hin	florestest2021	0.51659	24.2		503	13829
+hin-ben	florestest2021	0.47109	13.9		509	10438
+xho-zul	florestest2021	0.49318	11.5		503	9278
+zul-xho	florestest2021	0.47491	11.9		509	9038

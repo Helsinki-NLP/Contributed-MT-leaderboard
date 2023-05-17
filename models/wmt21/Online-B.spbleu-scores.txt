@@ -1,0 +1,8 @@
+ben-hin	florestest2021	31.2
+deu-fra	newstest2021	34.9
+eng-isl	newstest2021	34.6
+eng-jpn	newstest2021	24.9
+fra-deu	newstest2021	49.6
+hin-ben	florestest2021	29.2
+isl-eng	newstest2021	42.9
+jpn-eng	newstest2021	30.9

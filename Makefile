@@ -102,29 +102,28 @@ SYSTEM_OUTPUT := models/work/${USER}/${MODELNAME}/${BENCHMARK}.${LANGPAIR}.outpu
 TESTSET_SRC   := OPUS-MT-testsets/testsets/${LANGPAIR}/${BENCHMARK}.${SRC}
 MODEL_YAML    := models/${USER}/${MODELNAME}.yaml
 
-ifneq ($(wildcard ${TESTSET_SRC}),)
-
 eval:
-	mkdir -p models/${USER}
+ifneq ($(wildcard ${TESTSET_SRC}),)
+	@mkdir -p models/${USER}
 ifneq ($(wildcard ${MODEL_YAML}),)
-	grep '^language-pairs: ' ${MODEL_YAML} |\
+	@grep '^language-pairs: ' ${MODEL_YAML} |\
 	cut -f2- -d: | sed 's/^/${LANGPAIR}/' | \
-	tr ' ' "\n" | sort -u | tr "\n" ' '                        > ${MODEL_YAML}.langpairs
-	grep -v '^language-pairs: ' ${MODEL_YAML}                  > ${MODEL_YAML}.tmp
-	cat ${MODEL_YAML}.langpairs | sed 's/^/language-pairs: /' >> ${MODEL_YAML}.tmp
-	mv ${MODEL_YAML}.tmp ${MODEL_YAML}
+	tr ' ' "\n" | sort -u | tr "\n" ' '                         > ${MODEL_YAML}.langpairs || exit 0
+	@grep -v '^language-pairs: ' ${MODEL_YAML}                  > ${MODEL_YAML}.tmp || exit 0
+	@cat ${MODEL_YAML}.langpairs | sed 's/^/language-pairs: /' >> ${MODEL_YAML}.tmp
+	@mv -f ${MODEL_YAML}.tmp ${MODEL_YAML}
 ifdef WEBSITE
-	grep -v '^website: ' ${MODEL_YAML}                         > ${MODEL_YAML}.tmp
-	echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}.tmp
-	mv ${MODEL_YAML}.tmp ${MODEL_YAML}
+	@grep -v '^website: ' ${MODEL_YAML}                         > ${MODEL_YAML}.tmp || exit 0
+	@echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}.tmp
+	@mv ${MODEL_YAML}.tmp ${MODEL_YAML}
 endif
 else
-	echo "language-pairs: ${LANGPAIR}"                         > ${MODEL_YAML}
+	@echo "language-pairs: ${LANGPAIR}"                         > ${MODEL_YAML}
 ifdef WEBSITE
-	echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}
+	@echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}
 endif
 endif
-	if [ `cat ${FILE} | wc -l` -eq `cat ${TESTSET_SRC} | wc -l` ]; then \
+	@if [ `cat ${FILE} | grep . | wc -l` -eq `cat ${TESTSET_SRC} | grep . | wc -l` ]; then \
 	  mkdir -p models/work/${USER}/${MODELNAME}; \
 	  cp ${FILE} ${SYSTEM_OUTPUT}; \
 	  ${MAKE} USER_CONTRIBUTED_FILE=${SYSTEM_OUTPUT} eval-userfile; \
@@ -132,6 +131,8 @@ endif
 	  echo "${FILE} and ${TESTSET_SRC} have different lengths"; \
 	fi
 
+else
+	@echo "cannot find ${TESTSET_SRC}"
 endif
 endif
 endif

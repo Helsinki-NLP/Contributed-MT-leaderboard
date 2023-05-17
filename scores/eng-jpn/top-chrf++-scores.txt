@@ -1,1 +1,2 @@
 flores200-devtest	0.27871	facebook/nllb-200-54.5B
+newstest2021	0.34247	wmt21/NiuTrans

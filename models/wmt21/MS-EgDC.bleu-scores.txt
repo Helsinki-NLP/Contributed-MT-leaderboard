@@ -1,0 +1,4 @@
+ben-hin	florestest2021	21.1
+hin-ben	florestest2021	10.9
+xho-zul	florestest2021	9.9
+zul-xho	florestest2021	9.2

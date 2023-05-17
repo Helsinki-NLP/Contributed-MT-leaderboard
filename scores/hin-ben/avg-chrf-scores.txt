@@ -1,2 +1,11 @@
 flores
 0.48941	facebook/nllb-200-54.5B
+0.47966	wmt21/Online-B
+0.47835	wmt21/TRANSSION
+0.47109	wmt21/GTCOM
+0.46499	wmt21/Online-A
+0.45745	wmt21/HuaweiTSC
+0.45356	wmt21/UEdin
+0.43388	wmt21/MS-EgDC
+0.4322	wmt21/Online-Y
+0.36377	wmt21/Online-G

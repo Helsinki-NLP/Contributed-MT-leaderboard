@@ -1,1 +1,2 @@
 flores200-devtest	30.3	facebook/nllb-200-54.5B
+newstest2021	27.8	wmt21/WeChat-AI

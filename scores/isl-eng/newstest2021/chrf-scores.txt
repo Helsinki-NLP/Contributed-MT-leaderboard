@@ -1,0 +1,10 @@
+0.62416	wmt21/Online-B
+0.62289	wmt21/Facebook-AI
+0.62084	wmt21/Manifold
+0.61133	wmt21/HuaweiTSC
+0.6104	wmt21/NiuTrans
+0.57821	wmt21/Mideind
+0.57442	wmt21/Online-A
+0.57397	wmt21/Allegro
+0.55855	wmt21/Online-Y
+0.4922	wmt21/Online-G

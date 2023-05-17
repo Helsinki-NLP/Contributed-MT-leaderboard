@@ -1,0 +1,8 @@
+ben-hin	florestest2021	0.48867
+deu-fra	newstest2021	0.55632
+eng-isl	newstest2021	0.51451
+eng-jpn	newstest2021	0.2702
+fra-deu	newstest2021	0.66405
+hin-ben	florestest2021	0.43753
+isl-eng	newstest2021	0.61188
+jpn-eng	newstest2021	0.50465

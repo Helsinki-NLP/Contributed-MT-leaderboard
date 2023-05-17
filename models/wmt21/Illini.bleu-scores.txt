@@ -1,0 +1,2 @@
+eng-jpn	newstest2021	20.4
+jpn-eng	newstest2021	18.6

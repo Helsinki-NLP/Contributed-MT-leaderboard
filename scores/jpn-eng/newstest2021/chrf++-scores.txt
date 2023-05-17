@@ -1,0 +1,15 @@
+0.5152	wmt21/Facebook-AI
+0.51399	wmt21/WeChat-AI
+0.51121	wmt21/NiuTrans
+0.50704	wmt21/MiSS
+0.50555	wmt21/HuaweiTSC
+0.50465	wmt21/Online-B
+0.50109	wmt21/XMU
+0.49832	wmt21/IIE-MT
+0.47438	wmt21/capitalmarvel
+0.46732	wmt21/Online-W
+0.45823	wmt21/Online-A
+0.45367	wmt21/movelikeajaguar
+0.44922	wmt21/Online-G
+0.42999	wmt21/Illini
+0.42789	wmt21/Online-Y

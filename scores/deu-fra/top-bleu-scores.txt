@@ -1,1 +1,2 @@
 flores200-devtest	38.8	facebook/nllb-200-54.5B
+newstest2021	35.7	wmt21/Online-A

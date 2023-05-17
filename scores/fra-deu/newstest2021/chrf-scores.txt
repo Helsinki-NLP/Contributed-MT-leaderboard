@@ -1,0 +1,9 @@
+0.78781	wmt21/Online-W
+0.68911	wmt21/Online-B
+0.66967	wmt21/Online-A
+0.66592	wmt21/eTranslation
+0.65907	wmt21/Online-Y
+0.65415	wmt21/P3AI
+0.65288	wmt21/Online-G
+0.64396	wmt21/LISN
+0.64064	wmt21/talp_upc

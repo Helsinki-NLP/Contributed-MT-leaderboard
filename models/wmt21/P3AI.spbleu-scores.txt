@@ -1,0 +1,2 @@
+deu-fra	newstest2021	37.8
+fra-deu	newstest2021	43.7

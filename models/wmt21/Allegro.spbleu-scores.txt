@@ -1,0 +1,2 @@
+eng-isl	newstest2021	30.8
+isl-eng	newstest2021	35.9

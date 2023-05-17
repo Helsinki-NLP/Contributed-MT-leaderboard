@@ -1,0 +1,2 @@
+deu-fra	newstest2021	0.5363
+fra-deu	newstest2021	0.6173
