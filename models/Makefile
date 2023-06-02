@@ -201,3 +201,15 @@ download-all:
 
 %.eval.zip: %.scores.txt
 	-wget -qq -O $@ ${STORAGE_URL}/models/$@
+
+
+
+
+
+
+benchmark-info:
+	@echo "benchmarks: ${TESTSETS}"
+	@echo "  selected: ${TESTSET}"
+	@echo "    source: ${TESTSET_SRC}"
+	@echo "trg-labels: ${TESTSET_LABELS}"
+	@echo "references: ${TESTSET_REFS}"

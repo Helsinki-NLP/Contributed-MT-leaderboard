@@ -1,2 +1,6 @@
 ben-hin	florestest2021	0.48949	21.7		503	13829
+deu-eng	newstest2021	0.69349	51.8		1000	19970
+eng-deu	newstest2021	0.70784	57.0		1002	27898
+eng-hau	newstest2021	0.45293	14.8		1000	32966
+hau-eng	newstest2021	0.42247	14.9		997	27372
 hin-ben	florestest2021	0.45356	12.5		509	10438

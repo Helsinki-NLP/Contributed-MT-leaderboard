@@ -1,0 +1,2 @@
+eng-ukr	generaltest2022	0.51129
+ukr-eng	generaltest2022	0.63209

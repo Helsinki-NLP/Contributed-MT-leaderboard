@@ -1,8 +1,14 @@
 ben-hin	florestest2021	21.9
+deu-eng	newstest2021	53.0
+eng-deu	newstest2021	57.9
+eng-hau	newstest2021	20.3
 eng-isl	newstest2021	27.5
-eng-jpn	newstest2021	29.7
+eng-jpn	newstest2021	1.0
+eng-zho	newstest2021	4.9
+hau-eng	newstest2021	17.5
 hin-ben	florestest2021	13.0
 isl-eng	newstest2021	38.4
 jpn-eng	newstest2021	26.5
 xho-zul	florestest2021	11.8
+zho-eng	newstest2021	28.9
 zul-xho	florestest2021	9.9

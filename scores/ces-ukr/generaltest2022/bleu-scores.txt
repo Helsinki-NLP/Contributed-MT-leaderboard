@@ -1,0 +1,6 @@
+38.3	wmt22/Lan-Bridge
+36.8	wmt22/GTCOM
+36.0	wmt22/HuaweiTSC
+35.9	wmt22/Online-A
+32.5	wmt22/Online-G
+32.1	wmt22/Online-Y

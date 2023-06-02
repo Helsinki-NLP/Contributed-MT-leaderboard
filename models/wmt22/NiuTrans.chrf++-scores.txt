@@ -1,0 +1,4 @@
+eng-hrv	generaltest2022	0.59032
+eng-liv	generaltest2022	0.29513
+liv-eng	generaltest2022	0.34136
+zho-eng	generaltest2022	0.5442

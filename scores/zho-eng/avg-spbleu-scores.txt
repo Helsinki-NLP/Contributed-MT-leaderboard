@@ -1,2 +1,19 @@
 news
+36.9	wmt21/DIDI-NLP
+36.8	wmt21/Borderline
+36.7	wmt21/Online-B
+36.6	wmt21/yyds
+36.2	wmt21/KwaiNLP
+35.8	wmt21/NiuTrans
+35.6	wmt21/IIE-MT
+35.4	wmt21/SMU
+35	wmt21/XMU
+34.1	wmt21/UF
+33.8	wmt21/P3AI
+33.2	wmt21/Machine_Translation
+32.9	wmt21/HuaweiTSC
+32.7	wmt21/NJUSC_TSC
+32.6	wmt21/HappyNewYear
 31.3	facebook/nllb-200-54.5B
+30.3	wmt21/Online-G
+27.9	wmt21/Online-Y

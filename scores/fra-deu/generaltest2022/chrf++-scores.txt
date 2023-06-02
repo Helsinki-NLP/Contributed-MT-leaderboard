@@ -1,0 +1,7 @@
+0.79797	wmt22/Online-W
+0.6675	wmt22/Online-B
+0.66452	wmt22/eTranslation
+0.65421	wmt22/Online-Y
+0.65187	wmt22/Online-A
+0.63527	wmt22/Online-G
+0.62992	wmt22/Lan-Bridge

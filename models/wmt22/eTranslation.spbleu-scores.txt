@@ -1,0 +1,3 @@
+eng-rus	generaltest2022	36.7
+eng-ukr	generaltest2022	35.3
+fra-deu	generaltest2022	51.6

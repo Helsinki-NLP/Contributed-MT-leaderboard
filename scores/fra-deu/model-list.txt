@@ -7,3 +7,10 @@ wmt21/Online-W
 wmt21/Online-Y
 wmt21/P3AI
 wmt21/talp_upc
+wmt22/Lan-Bridge
+wmt22/Online-A
+wmt22/Online-B
+wmt22/Online-G
+wmt22/Online-W
+wmt22/Online-Y
+wmt22/eTranslation

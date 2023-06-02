@@ -1,4 +1,10 @@
+eng-hau	newstest2021	0.53196
 eng-isl	newstest2021	0.57475
 eng-jpn	newstest2021	0.39939
+eng-rus	newstest2021	0.60432
+eng-zho	newstest2021	0.34538
+hau-eng	newstest2021	0.44725
 isl-eng	newstest2021	0.6104
 jpn-eng	newstest2021	0.53222
+rus-eng	newstest2021	0.71203
+zho-eng	newstest2021	0.6107

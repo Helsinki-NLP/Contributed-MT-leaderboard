@@ -1,0 +1,2 @@
+eng-ukr	generaltest2022	0.53999	25.2		2037	35418
+ukr-eng	generaltest2022	0.64627	41.9		2018	34254

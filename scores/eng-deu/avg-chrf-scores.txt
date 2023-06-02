@@ -1,2 +1,21 @@
-flores news
-0.40784	facebook/nllb-200-54.5B
+news
+0.74991	wmt21/VolcTrans-GLAT
+0.7442	wmt21/Online-W
+0.73459	wmt21/Facebook-AI
+0.72788	wmt21/WeChat-AI
+0.71744	wmt21/NVIDIA-NeMo
+0.71486	wmt21/HuaweiTSC
+0.71128	wmt21/Online-A
+0.71013	wmt21/eTranslation
+0.70851	wmt21/UF
+0.70849	wmt21/VolcTrans-AT
+0.70806	wmt21/Online-B
+0.70784	wmt21/UEdin
+0.70236	wmt21/Manifold
+0.69808	wmt21/P3AI
+0.69139	wmt21/happypoet
+0.68696	wmt21/Online-Y
+0.68333	wmt21/Online-G
+0.67972	wmt21/nuclear_trans
+0.67241	wmt21/BUPT_rush
+0.6437	wmt21/ICL

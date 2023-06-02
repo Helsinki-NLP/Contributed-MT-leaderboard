@@ -1,2 +1,12 @@
-flores news
-0.61832	facebook/nllb-200-54.5B
+news
+0.70918	wmt21/Online-G
+0.69987	wmt21/Facebook-AI
+0.69864	wmt21/Online-B
+0.69614	wmt21/NVIDIA-NeMo
+0.69471	wmt21/NiuTrans
+0.69468	wmt21/Manifold
+0.68757	wmt21/Online-A
+0.671	wmt21/AFRL
+0.66395	wmt21/Online-W
+0.62721	wmt21/Online-Y
+0.61863	facebook/nllb-200-54.5B

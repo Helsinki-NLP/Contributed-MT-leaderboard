@@ -1,0 +1,13 @@
+20.4	wmt21/P3AI
+20.3	wmt21/HuaweiTSC
+20.1	wmt21/Facebook-AI
+19.7	wmt21/NiuTrans
+18.9	wmt21/TRANSSION
+18.8	wmt21/ZMT
+18.0	wmt21/Manifold
+17.9	wmt21/GTCOM
+17.1	wmt21/TWB
+16.2	wmt21/AMU
+16.1	wmt21/MS-EgDC
+15.0	wmt21/Online-Y
+14.8	wmt21/UEdin

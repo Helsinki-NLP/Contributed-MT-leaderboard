@@ -1,0 +1,11 @@
+ces-ukr	generaltest2022	0.60054
+eng-hrv	generaltest2022	0.59471
+eng-liv	generaltest2022	0.35585
+eng-rus	generaltest2022	0.53921
+eng-ukr	generaltest2022	0.52043
+eng-zho	generaltest2022	0.47069
+liv-eng	generaltest2022	0.46972
+rus-eng	generaltest2022	0.66896
+ukr-ces	generaltest2022	0.57639
+ukr-eng	generaltest2022	0.62457
+zho-eng	generaltest2022	0.56984

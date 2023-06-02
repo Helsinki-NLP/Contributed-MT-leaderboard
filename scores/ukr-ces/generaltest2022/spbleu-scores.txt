@@ -1,0 +1,12 @@
+44.7	wmt22/AMU
+43.9	wmt22/Online-B
+43.5	wmt22/Lan-Bridge
+43.0	wmt22/CUNI-Transformer
+42.8	wmt22/CharlesTranslator
+42.7	wmt22/HuaweiTSC
+41.9	wmt22/CUNI-JL-JH
+40.2	wmt22/Online-A
+38.1	wmt22/GTCOM
+38.0	wmt22/Online-G
+37.1	wmt22/Online-Y
+31.0	wmt22/ALMAnaCH-Inria

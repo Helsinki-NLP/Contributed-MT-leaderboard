@@ -1,0 +1,9 @@
+51.6	wmt22/Online-B
+51.3	wmt22/Lan-Bridge
+49.7	wmt22/GTCOM
+48.8	wmt22/HuaweiTSC
+48.1	wmt22/Online-A
+48.0	wmt22/NiuTrans
+47.6	wmt22/SRPOL
+43.7	wmt22/Online-Y
+41.4	wmt22/Online-G

@@ -1,4 +1,6 @@
 ben-hin	florestest2021	0.48982
+eng-hau	newstest2021	0.47277
+hau-eng	newstest2021	0.45011
 hin-ben	florestest2021	0.43591
 xho-zul	florestest2021	0.4405
 zul-xho	florestest2021	0.44739

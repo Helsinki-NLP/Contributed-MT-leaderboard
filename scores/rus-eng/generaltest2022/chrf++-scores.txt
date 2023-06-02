@@ -1,0 +1,10 @@
+0.68471	wmt22/Online-G
+0.67345	wmt22/JDExploreAcademy
+0.6692	wmt22/Lan-Bridge
+0.66896	wmt22/HuaweiTSC
+0.66696	wmt22/Online-B
+0.66669	wmt22/Online-A
+0.66373	wmt22/Online-Y
+0.65549	wmt22/SRPOL
+0.6457	wmt22/Online-W
+0.55767	wmt22/ALMAnaCH-Inria

@@ -1,3 +1,9 @@
+deu-eng	newstest2021	0.65897
 deu-fra	newstest2021	0.57943
+eng-deu	newstest2021	0.67922
+eng-hau	newstest2021	0.46354
 eng-isl	newstest2021	0.53411
+eng-rus	newstest2021	0.59018
+hau-eng	newstest2021	0.43359
 isl-eng	newstest2021	0.6071
+rus-eng	newstest2021	0.69468

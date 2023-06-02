@@ -1,0 +1,12 @@
+0.5876	wmt22/AMU
+0.58427	wmt22/Lan-Bridge
+0.58314	wmt22/Online-B
+0.57639	wmt22/HuaweiTSC
+0.57197	wmt22/CharlesTranslator
+0.5716	wmt22/CUNI-Transformer
+0.56799	wmt22/CUNI-JL-JH
+0.55499	wmt22/Online-A
+0.5431	wmt22/Online-G
+0.53851	wmt22/GTCOM
+0.53164	wmt22/Online-Y
+0.4868	wmt22/ALMAnaCH-Inria

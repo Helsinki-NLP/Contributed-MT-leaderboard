@@ -1,0 +1,5 @@
+17.0	wmt22/TAL-SJTU
+15.0	wmt22/TartuNLP
+14.7	wmt22/Liv4ever
+12.8	wmt22/HuaweiTSC
+12.3	wmt22/NiuTrans

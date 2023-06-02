@@ -1,0 +1,4 @@
+eng-hrv	generaltest2022	41.4
+eng-liv	generaltest2022	12.3
+liv-eng	generaltest2022	13.0
+zho-eng	generaltest2022	30.5

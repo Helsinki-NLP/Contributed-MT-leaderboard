@@ -1,1 +1,2 @@
 eng-isl	newstest2021	0.51013
+eng-zho	newstest2021	0.28313

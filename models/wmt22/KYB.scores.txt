@@ -1,0 +1,2 @@
+eng-jpn	generaltest2022	0.28567	13.3		2037	2678
+jpn-eng	generaltest2022	0.4345	18.1		2008	34136

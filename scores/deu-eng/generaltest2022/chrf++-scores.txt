@@ -1,0 +1,9 @@
+0.64693	wmt22/Online-A
+0.64666	wmt22/Online-G
+0.64498	wmt22/Lan-Bridge
+0.64085	wmt22/JDExploreAcademy
+0.64028	wmt22/Online-B
+0.63895	wmt22/PROMT
+0.63856	wmt22/Online-Y
+0.63724	wmt22/Online-W
+0.56762	wmt22/LT22

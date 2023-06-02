@@ -1,0 +1,14 @@
+0.5166	wmt22/Online-W
+0.51278	wmt22/NT5
+0.50135	wmt22/JDExploreAcademy
+0.49891	wmt22/Online-B
+0.49755	wmt22/DLUT
+0.49078	wmt22/LanguageX
+0.48711	wmt22/Lan-Bridge
+0.48391	wmt22/Online-A
+0.48274	wmt22/NAIST-NICT-TIT
+0.48195	wmt22/Online-Y
+0.48012	wmt22/AISP-SJTU
+0.45698	wmt22/Online-G
+0.4345	wmt22/KYB
+0.11361	wmt22/AIST

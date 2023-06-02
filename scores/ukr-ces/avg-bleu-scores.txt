@@ -1,2 +1,13 @@
-flores
-25.1	facebook/nllb-200-54.5B
+generaltest2022
+37	wmt22/AMU
+36.5	wmt22/Lan-Bridge
+36.4	wmt22/Online-B
+36	wmt22/HuaweiTSC
+35.9	wmt22/CharlesTranslator
+35.8	wmt22/CUNI-Transformer
+35.1	wmt22/CUNI-JL-JH
+33.3	wmt22/Online-A
+31.5	wmt22/Online-G
+31.3	wmt22/GTCOM
+29.6	wmt22/Online-Y
+25.3	wmt22/ALMAnaCH-Inria

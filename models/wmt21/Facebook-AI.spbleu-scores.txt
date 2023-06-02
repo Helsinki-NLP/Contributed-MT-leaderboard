@@ -1,4 +1,14 @@
+ces-eng	newstest2021	49.1
+deu-eng	newstest2021	58.8
+eng-ces	newstest2021	47.6
+eng-deu	newstest2021	70.2
+eng-hau	newstest2021	23.6
 eng-isl	newstest2021	42.6
 eng-jpn	newstest2021	31.0
+eng-rus	newstest2021	55.1
+eng-zho	newstest2021	42.6
+hau-eng	newstest2021	24.9
 isl-eng	newstest2021	44.4
 jpn-eng	newstest2021	31.4
+rus-eng	newstest2021	61.4
+zho-eng	newstest2021	36.2

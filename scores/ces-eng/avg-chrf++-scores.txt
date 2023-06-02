@@ -1,2 +1,10 @@
-flores news
-0.606235	facebook/nllb-200-54.5B
+news
+0.61703	wmt21/Facebook-AI
+0.60586	wmt21/Online-B
+0.59794	wmt21/CUNI-DocTransformer
+0.59284	wmt21/Online-W
+0.58514	wmt21/Online-G
+0.58193	wmt21/Online-A
+0.56817	facebook/nllb-200-54.5B
+0.5619	wmt21/CUNI-Transformer2018
+0.55514	wmt21/Online-Y

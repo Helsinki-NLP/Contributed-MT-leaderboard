@@ -1,3 +1,9 @@
+deu-eng	newstest2021	49.3
 deu-fra	newstest2021	32.5
+eng-deu	newstest2021	56.0
+eng-hau	newstest2021	18.0
 eng-isl	newstest2021	28.6
+eng-rus	newstest2021	41.5
+hau-eng	newstest2021	16.9
 isl-eng	newstest2021	39.8
+rus-eng	newstest2021	55.3

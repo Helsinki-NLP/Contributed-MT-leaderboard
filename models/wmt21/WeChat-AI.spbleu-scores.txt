@@ -1,2 +1,4 @@
+eng-deu	newstest2021	68.4
 eng-jpn	newstest2021	28.7
+eng-zho	newstest2021	44.0
 jpn-eng	newstest2021	31.5

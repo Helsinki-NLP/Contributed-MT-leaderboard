@@ -1,0 +1,3 @@
+deu-eng	newstest2021	50.6
+eng-zho	newstest2021	4.7
+zho-eng	newstest2021	32.2

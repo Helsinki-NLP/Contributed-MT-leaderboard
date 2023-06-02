@@ -1,0 +1,9 @@
+41.2	wmt22/Online-B
+39.6	wmt22/Lan-Bridge
+38.5	wmt22/GTCOM
+36.8	wmt22/Online-A
+36.5	wmt22/Online-G
+35.4	wmt22/Online-Y
+35.3	wmt22/eTranslation
+35.2	wmt22/HuaweiTSC
+33.9	wmt22/ARC-NKUA

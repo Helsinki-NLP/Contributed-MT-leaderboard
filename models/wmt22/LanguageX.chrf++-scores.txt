@@ -1,0 +1,4 @@
+eng-jpn	generaltest2022	0.2768
+eng-zho	generaltest2022	0.45881
+jpn-eng	generaltest2022	0.46664
+zho-eng	generaltest2022	0.58867

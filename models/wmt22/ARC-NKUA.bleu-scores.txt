@@ -1,0 +1,2 @@
+eng-ukr	generaltest2022	25.2
+ukr-eng	generaltest2022	41.9

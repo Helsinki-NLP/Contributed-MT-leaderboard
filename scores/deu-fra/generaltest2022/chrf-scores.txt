@@ -1,0 +1,6 @@
+0.74623	wmt22/Online-B
+0.66783	wmt22/Online-Y
+0.65489	wmt22/Online-W
+0.6449	wmt22/Online-A
+0.62662	wmt22/Online-G
+0.54416	wmt22/LT22

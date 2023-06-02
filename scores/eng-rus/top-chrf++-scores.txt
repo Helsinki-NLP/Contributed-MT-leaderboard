@@ -1,1 +1,3 @@
 flores200-devtest	0.56344	facebook/nllb-200-54.5B
+generaltest2022	0.5763	wmt22/Online-B
+newstest2021	0.61747	wmt21/Facebook-AI

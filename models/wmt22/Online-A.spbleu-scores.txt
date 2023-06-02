@@ -1,0 +1,16 @@
+ces-ukr	generaltest2022	43.5
+deu-eng	generaltest2022	54.3
+deu-fra	generaltest2022	46.1
+eng-ces	generaltest2022	57.7
+eng-deu	generaltest2022	57.1
+eng-hrv	generaltest2022	48.1
+eng-jpn	generaltest2022	23.4
+eng-rus	generaltest2022	40.2
+eng-ukr	generaltest2022	36.8
+eng-zho	generaltest2022	60.8
+fra-deu	generaltest2022	49.7
+jpn-eng	generaltest2022	26.8
+rus-eng	generaltest2022	48.1
+ukr-ces	generaltest2022	40.2
+ukr-eng	generaltest2022	44.4
+zho-eng	generaltest2022	35.0

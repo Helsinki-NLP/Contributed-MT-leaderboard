@@ -1,0 +1,2 @@
+deu-eng	newstest2021	52.1
+eng-deu	newstest2021	64.3

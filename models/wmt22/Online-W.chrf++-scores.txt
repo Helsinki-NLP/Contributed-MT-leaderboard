@@ -1,0 +1,9 @@
+deu-eng	generaltest2022	0.63724
+deu-fra	generaltest2022	0.63672
+eng-ces	generaltest2022	0.68724
+eng-deu	generaltest2022	0.6645
+eng-rus	generaltest2022	0.56019
+eng-zho	generaltest2022	0.39463
+fra-deu	generaltest2022	0.79797
+jpn-eng	generaltest2022	0.49446
+rus-eng	generaltest2022	0.6457

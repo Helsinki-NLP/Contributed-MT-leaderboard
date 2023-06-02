@@ -1,0 +1,13 @@
+0.63073	wmt22/Online-B
+0.47069	wmt22/HuaweiTSC
+0.4693	wmt22/Online-Y
+0.46541	wmt22/Online-A
+0.45881	wmt22/LanguageX
+0.4438	wmt22/Manifold
+0.42968	wmt22/JDExploreAcademy
+0.42417	wmt22/AISP-SJTU
+0.41368	wmt22/Lan-Bridge
+0.406	wmt22/DLUT
+0.40258	wmt22/GTCOM
+0.40042	wmt22/Online-G
+0.39463	wmt22/Online-W

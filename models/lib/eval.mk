@@ -103,6 +103,18 @@ ${EVAL_LANGPAIR_TARGET}:
 	${MAKE} LANGPAIR=$(@:-eval=) eval-testsets
 
 
+EVAL_BENCHMARK_TARGETS = $(patsubst %,%-eval,${TESTSETS})
+
+.PHONY: eval-testsets
+eval-testsets: ${EVAL_BENCHMARK_TARGETS}
+
+.PHONY: ${EVAL_BENCHMARK_TARGETS}
+${EVAL_BENCHMARK_TARGETS}:
+	${MAKE} TESTSET=$(@:-eval=) eval
+
+
+
+
 TRANSLATED_BENCHMARKS = $(patsubst %,${MODEL_DIR}/%.${LANGPAIR}.compare,${TESTSETS})
 EVALUATED_BENCHMARKS  = $(patsubst %,${MODEL_DIR}/%.${LANGPAIR}.eval,${TESTSETS})
 BENCHMARK_SCORE_FILES = $(foreach m,${METRICS},$(patsubst %.eval,%.${m},${EVALUATED_BENCHMARKS}))
@@ -111,24 +123,38 @@ BENCHMARK_SCORE_FILES = $(foreach m,${METRICS},$(patsubst %.eval,%.${m},${EVALUA
 .NOTINTERMEDIATE: ${TRANSLATED_BENCHMARKS} ${EVALUATED_BENCHMARKS} ${BENCHMARK_SCORE_FILES}
 
 
-.PHONY: eval-testsets
-eval-testsets: ${TRANSLATED_BENCHMARKS} ${EVALUATED_BENCHMARKS}
+# .PHONY: eval-testsets
+# eval-testsets: ${TRANSLATED_BENCHMARKS} ${EVALUATED_BENCHMARKS}
 
 
 
 .INTERMEDIATE: ${WORK_DIR}/%.${LANGPAIR}.output
 
 
-## don't make the temporary output a pre-requisite
-## (somehow it does not always work to skip creating it if the target already exists)
+## compare source. reference and hypothesis
+## NOTE: this only shows one reference translation
 
-${MODEL_DIR}/%.${LANGPAIR}.compare:	${TESTSET_DIR}/%.${SRC} \
-					${TESTSET_DIR}/%.${TRG} \
-					${WORK_DIR}/%.${LANGPAIR}.output
+${MODEL_DIR}/%.${LANGPAIR}.compare: ${TESTSET_SRC} ${TESTSET_TRG} ${WORK_DIR}/%.${LANGPAIR}.output
 	@mkdir -p ${dir $@}
 	if [ -s $(word 3,$^) ]; then \
 	  paste -d "\n" $^ | sed 'n;n;G;' > $@; \
 	fi
+
+
+
+## OLD: expect testset files in TESTSET_DIR
+
+# ${MODEL_DIR}/%.${LANGPAIR}.compare:	${TESTSET_DIR}/%.${SRC} \
+# 					${TESTSET_DIR}/%.${TRG} \
+# 					${WORK_DIR}/%.${LANGPAIR}.output
+# 	@mkdir -p ${dir $@}
+# 	if [ -s $(word 3,$^) ]; then \
+# 	  paste -d "\n" $^ | sed 'n;n;G;' > $@; \
+# 	fi
+
+
+## don't make the temporary output a pre-requisite
+## (somehow it does not always work to skip creating it if the target already exists)
 
 
 #${MODEL_DIR}/%.${LANGPAIR}.compare: ${TESTSET_DIR}/%.${SRC} ${TESTSET_DIR}/%.${TRG}
@@ -171,57 +197,107 @@ ifneq ($(filter kor,${TRG}),)
   SACREBLEU_PARAMS = --tokenize ko-mecab
 endif
 
+
 ${MODEL_DIR}/%.${LANGPAIR}.spbleu: ${MODEL_DIR}/%.${LANGPAIR}.compare
 	@echo "... create ${MODEL}/$(notdir $@)"
 	@mkdir -p ${dir $@}
-	@sed -n '1~4p' $< > $@.src
-	@sed -n '2~4p' $< > $@.ref
 	@sed -n '3~4p' $< > $@.hyp
-	@cat $@.hyp | \
-	sacrebleu -f text --metrics=bleu --tokenize flores200 $@.ref > $@
-	@rm -f $@.src $@.ref $@.hyp
+	@cat $@.hyp | sacrebleu -f text --metrics=bleu --tokenize flores200 ${TESTSET_REFS} > $@
+	@rm -f $@.hyp
 
 ${MODEL_DIR}/%.${LANGPAIR}.bleu: ${MODEL_DIR}/%.${LANGPAIR}.compare
 	@echo "... create ${MODEL}/$(notdir $@)"
 	@mkdir -p ${dir $@}
-	@sed -n '1~4p' $< > $@.src
-	@sed -n '2~4p' $< > $@.ref
 	@sed -n '3~4p' $< > $@.hyp
-	@cat $@.hyp | \
-	sacrebleu -f text ${SACREBLEU_PARAMS} $@.ref > $@
-	@rm -f $@.src $@.ref $@.hyp
+	@cat $@.hyp | sacrebleu -f text --metrics=bleu ${TESTSET_REFS} > $@
+	@rm -f $@.hyp
 
 ${MODEL_DIR}/%.${LANGPAIR}.chrf: ${MODEL_DIR}/%.${LANGPAIR}.compare
 	@echo "... create ${MODEL}/$(notdir $@)"
 	@mkdir -p ${dir $@}
-	@sed -n '1~4p' $< > $@.src
-	@sed -n '2~4p' $< > $@.ref
 	@sed -n '3~4p' $< > $@.hyp
 	@cat $@.hyp | \
-	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 $@.ref |\
+	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 ${TESTSET_REFS} |\
 	perl -pe 'unless (/version\:1\./){@a=split(/\s+/);$$a[-1]/=100;$$_=join(" ",@a)."\n";}' > $@
-	@rm -f $@.src $@.ref $@.hyp
+	@rm -f $@.hyp
 
 ${MODEL_DIR}/%.${LANGPAIR}.chrf++: ${MODEL_DIR}/%.${LANGPAIR}.compare
 	@echo "... create ${MODEL}/$(notdir $@)"
 	@mkdir -p ${dir $@}
-	@sed -n '1~4p' $< > $@.src
-	@sed -n '2~4p' $< > $@.ref
 	@sed -n '3~4p' $< > $@.hyp
 	@cat $@.hyp | \
-	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 --chrf-word-order 2 $@.ref |\
+	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 --chrf-word-order 2 ${TESTSET_REFS} |\
 	perl -pe 'unless (/version\:1\./){@a=split(/\s+/);$$a[-1]/=100;$$_=join(" ",@a)."\n";}' > $@
-	@rm -f $@.src $@.ref $@.hyp
+	@rm -f $@.hyp
 
 ${MODEL_DIR}/%.${LANGPAIR}.ter: ${MODEL_DIR}/%.${LANGPAIR}.compare
 	@echo "... create ${MODEL}/$(notdir $@)"
 	@mkdir -p ${dir $@}
-	@sed -n '1~4p' $< > $@.src
-	@sed -n '2~4p' $< > $@.ref
 	@sed -n '3~4p' $< > $@.hyp
 	@cat $@.hyp | \
-	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=ter $@.ref > $@
-	@rm -f $@.src $@.ref $@.hyp
+	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=ter ${TESTSET_REFS} > $@
+	@rm -f $@.hyp
+
+
+
+
+
+# ${MODEL_DIR}/%.${LANGPAIR}.spbleu: ${MODEL_DIR}/%.${LANGPAIR}.compare
+# 	@echo "... create ${MODEL}/$(notdir $@)"
+# 	@mkdir -p ${dir $@}
+# 	@sed -n '1~4p' $< > $@.src
+# 	@sed -n '2~4p' $< > $@.ref
+# 	@sed -n '3~4p' $< > $@.hyp
+# 	@cat $@.hyp | \
+# 	sacrebleu -f text --metrics=bleu --tokenize flores200 $@.ref > $@
+# 	@rm -f $@.src $@.ref $@.hyp
+
+# ${MODEL_DIR}/%.${LANGPAIR}.bleu: ${MODEL_DIR}/%.${LANGPAIR}.compare
+# 	@echo "... create ${MODEL}/$(notdir $@)"
+# 	@mkdir -p ${dir $@}
+# 	@sed -n '1~4p' $< > $@.src
+# 	@sed -n '2~4p' $< > $@.ref
+# 	@sed -n '3~4p' $< > $@.hyp
+# 	@cat $@.hyp | \
+# 	sacrebleu -f text ${SACREBLEU_PARAMS} $@.ref > $@
+# 	@rm -f $@.src $@.ref $@.hyp
+
+# ${MODEL_DIR}/%.${LANGPAIR}.chrf: ${MODEL_DIR}/%.${LANGPAIR}.compare
+# 	@echo "... create ${MODEL}/$(notdir $@)"
+# 	@mkdir -p ${dir $@}
+# 	@sed -n '1~4p' $< > $@.src
+# 	@sed -n '2~4p' $< > $@.ref
+# 	@sed -n '3~4p' $< > $@.hyp
+# 	@cat $@.hyp | \
+# 	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 $@.ref |\
+# 	perl -pe 'unless (/version\:1\./){@a=split(/\s+/);$$a[-1]/=100;$$_=join(" ",@a)."\n";}' > $@
+# 	@rm -f $@.src $@.ref $@.hyp
+
+# ${MODEL_DIR}/%.${LANGPAIR}.chrf++: ${MODEL_DIR}/%.${LANGPAIR}.compare
+# 	@echo "... create ${MODEL}/$(notdir $@)"
+# 	@mkdir -p ${dir $@}
+# 	@sed -n '1~4p' $< > $@.src
+# 	@sed -n '2~4p' $< > $@.ref
+# 	@sed -n '3~4p' $< > $@.hyp
+# 	@cat $@.hyp | \
+# 	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 --chrf-word-order 2 $@.ref |\
+# 	perl -pe 'unless (/version\:1\./){@a=split(/\s+/);$$a[-1]/=100;$$_=join(" ",@a)."\n";}' > $@
+# 	@rm -f $@.src $@.ref $@.hyp
+
+# ${MODEL_DIR}/%.${LANGPAIR}.ter: ${MODEL_DIR}/%.${LANGPAIR}.compare
+# 	@echo "... create ${MODEL}/$(notdir $@)"
+# 	@mkdir -p ${dir $@}
+# 	@sed -n '1~4p' $< > $@.src
+# 	@sed -n '2~4p' $< > $@.ref
+# 	@sed -n '3~4p' $< > $@.hyp
+# 	@cat $@.hyp | \
+# 	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=ter $@.ref > $@
+# 	@rm -f $@.src $@.ref $@.hyp
+
+
+
+## COMET scores like to have GPUs but work without as well
+## NOTE: this only compares with one reference translation!
 
 ifneq (${GPU_AVAILABLE},1)
   COMET_PARAM += --gpus 0
@@ -383,12 +459,17 @@ pack-model-scores:
 	@if [ -d ${MODEL_DIR} ]; then \
 	  echo "... pack model scores from ${MODEL}"; \
 	  cd ${MODEL_DIR} && find . -name '*.*' | xargs zip ${MODEL_EVALZIP}; \
-	  find ${MODEL_DIR} -name '*.log' -printf '%P\n' > ${MODEL_DIR}.logfiles; \
+	  find ${MODEL_DIR} -name '*.log' | sed 's|^${MODEL_DIR}/||' > ${MODEL_DIR}.logfiles; \
 	  find ${MODEL_DIR} -name '*.*' -delete; \
 	  if [ -d ${MODEL_DIR} ]; then \
 	    rmdir ${MODEL_DIR}; \
 	  fi \
 	fi
+
+## %P is not implemented in all versions of find (e.g. Mac OS)
+##
+#	  find ${MODEL_DIR} -name '*.log' -printf '%P\n' > ${MODEL_DIR}.logfiles; \
+
 
 MODEL_PACK_EVAL := ${patsubst %,%.pack,${MODELS}}
 

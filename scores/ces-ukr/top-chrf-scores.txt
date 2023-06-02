@@ -1,1 +1,2 @@
 flores200-devtest	0.52179	facebook/nllb-200-54.5B
+generaltest2022	0.64048	wmt22/Online-B

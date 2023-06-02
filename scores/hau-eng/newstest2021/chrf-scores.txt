@@ -1,0 +1,14 @@
+0.48654	wmt21/Facebook-AI
+0.47238	wmt21/TRANSSION
+0.47231	wmt21/ZMT
+0.46796	wmt21/HuaweiTSC
+0.46715	wmt21/GTCOM
+0.46658	wmt21/Online-B
+0.46307	wmt21/P3AI
+0.45638	wmt21/Manifold
+0.45266	wmt21/MS-EgDC
+0.44843	wmt21/Online-Y
+0.44725	wmt21/NiuTrans
+0.42247	wmt21/UEdin
+0.41257	wmt21/AMU
+0.40283	wmt21/TWB

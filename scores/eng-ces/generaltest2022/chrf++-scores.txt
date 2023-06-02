@@ -1,0 +1,10 @@
+0.69633	wmt22/Online-B
+0.68724	wmt22/Online-W
+0.68688	wmt22/Lan-Bridge
+0.65644	wmt22/Online-A
+0.65404	wmt22/JDExploreAcademy
+0.64194	wmt22/CUNI-DocTransformer
+0.63126	wmt22/CUNI-Bergamot
+0.62451	wmt22/Online-G
+0.62385	wmt22/Online-Y
+0.62338	wmt22/CUNI-Transformer

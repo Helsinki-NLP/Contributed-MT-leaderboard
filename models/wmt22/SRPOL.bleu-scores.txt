@@ -1,0 +1,3 @@
+eng-hrv	generaltest2022	40.8
+eng-rus	generaltest2022	30.4
+rus-eng	generaltest2022	43.6

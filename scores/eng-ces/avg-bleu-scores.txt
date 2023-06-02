@@ -1,2 +1,11 @@
-flores news
-29.4	facebook/nllb-200-54.5B
+news
+36.1	wmt21/Facebook-AI
+33.6	wmt21/Online-W
+32.1	wmt21/CUNI-DocTransformer
+31.5	wmt21/CUNI-Transformer2018
+30.8	wmt21/eTranslation
+29	wmt21/Online-A
+28.9	wmt21/Online-B
+26.2	wmt21/Online-Y
+25.2	facebook/nllb-200-54.5B
+22	wmt21/Online-G

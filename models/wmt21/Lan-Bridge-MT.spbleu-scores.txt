@@ -1,1 +1,2 @@
 eng-isl	newstest2021	33.8
+eng-zho	newstest2021	38.5

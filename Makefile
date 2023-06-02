@@ -90,6 +90,8 @@ all-langpairs:
 #
 #--------------------------------------------------
 
+TESTSET_FILES := OPUS-MT-testsets/testsets.tsv
+
 ifdef USER
 ifdef MODELNAME
 ifdef BENCHMARK
@@ -98,8 +100,10 @@ ifdef FILE
 ifneq ($(wildcard ${FILE}),)
 
 SRC           := ${firstword ${subst -, ,${LANGPAIR}}}
+TRG           := ${lastword ${subst -, ,${LANGPAIR}}}
 SYSTEM_OUTPUT := models/work/${USER}/${MODELNAME}/${BENCHMARK}.${LANGPAIR}.output
-TESTSET_SRC   := OPUS-MT-testsets/testsets/${LANGPAIR}/${BENCHMARK}.${SRC}
+# TESTSET_SRC := OPUS-MT-testsets/testsets/${LANGPAIR}/${BENCHMARK}.${SRC}
+TESTSET_SRC   := $(patsubst %,OPUS-MT-testsets/%,$(shell grep '^${SRC}	${TRG}	${BENCHMARK}	' ${TESTSET_FILES} | cut -f7))
 MODEL_YAML    := models/${USER}/${MODELNAME}.yaml
 
 eval:
@@ -112,6 +116,7 @@ ifneq ($(wildcard ${MODEL_YAML}),)
 	@grep -v '^language-pairs: ' ${MODEL_YAML}                  > ${MODEL_YAML}.tmp || exit 0
 	@cat ${MODEL_YAML}.langpairs | sed 's/^/language-pairs: /' >> ${MODEL_YAML}.tmp
 	@mv -f ${MODEL_YAML}.tmp ${MODEL_YAML}
+	@rm -f ${MODEL_YAML}.langpairs
 ifdef WEBSITE
 	@grep -v '^website: ' ${MODEL_YAML}                         > ${MODEL_YAML}.tmp || exit 0
 	@echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}.tmp
@@ -164,6 +169,13 @@ endif
 ## - update user-score leaderboards
 ##
 ## NOTE: don't allow concurrent jobs because of potential racing conditions!
+##
+## basic workflow:
+##
+## (1) evaluate translations for a contributed system output of a specific benchmark
+## (2) register scores in all affected leaderbaords
+## (3) update leader boards with the new scores
+##    
 
 eval-userfile:
 ifneq ($(wildcard ${USER_CONTRIBUTED_FILE}),)

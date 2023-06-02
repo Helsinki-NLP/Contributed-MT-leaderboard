@@ -1,0 +1,4 @@
+deu-eng	newstest2021	0.67008
+eng-deu	newstest2021	0.69442
+eng-rus	newstest2021	0.59883
+rus-eng	newstest2021	0.69614

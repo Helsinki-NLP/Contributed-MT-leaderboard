@@ -1,1 +1,2 @@
 jpn-eng	newstest2021	25.4
+zho-eng	newstest2021	31.7

@@ -1,0 +1,13 @@
+76.0	wmt22/Online-B
+64.1	wmt22/LanguageX
+64.0	wmt22/HuaweiTSC
+60.8	wmt22/Online-A
+60.3	wmt22/Manifold
+60.2	wmt22/JDExploreAcademy
+59.9	wmt22/Online-Y
+58.9	wmt22/AISP-SJTU
+57.7	wmt22/Lan-Bridge
+55.0	wmt22/DLUT
+54.1	wmt22/GTCOM
+53.5	wmt22/Online-G
+52.8	wmt22/Online-W

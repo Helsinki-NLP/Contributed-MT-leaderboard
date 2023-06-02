@@ -1,2 +1,14 @@
-flores
-39.1	facebook/nllb-200-54.5B
+news
+24.9	wmt21/Facebook-AI
+23.2	wmt21/ZMT
+22.9	wmt21/Online-B
+22.1	wmt21/GTCOM
+21.8	wmt21/P3AI
+21.7	wmt21/HuaweiTSC
+20.9	wmt21/Manifold
+20.6	wmt21/MS-EgDC
+19.9	wmt21/NiuTrans
+18.2	wmt21/UEdin
+17.9	wmt21/Online-Y
+16.7	wmt21/AMU
+13.7	wmt21/TWB

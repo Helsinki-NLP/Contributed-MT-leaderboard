@@ -1,0 +1,8 @@
+49.1	wmt21/Facebook-AI
+47.7	wmt21/Online-B
+47.3	wmt21/CUNI-DocTransformer
+46.8	wmt21/Online-W
+44.9	wmt21/Online-A
+43.4	wmt21/Online-G
+41.6	wmt21/CUNI-Transformer2018
+40.0	wmt21/Online-Y

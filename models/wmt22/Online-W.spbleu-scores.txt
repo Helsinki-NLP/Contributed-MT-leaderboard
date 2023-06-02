@@ -1,0 +1,9 @@
+deu-eng	generaltest2022	52.9
+deu-fra	generaltest2022	49.7
+eng-ces	generaltest2022	61.1
+eng-deu	generaltest2022	56.4
+eng-rus	generaltest2022	39.3
+eng-zho	generaltest2022	52.8
+fra-deu	generaltest2022	69.9
+jpn-eng	generaltest2022	31.5
+rus-eng	generaltest2022	46.7

@@ -1,2 +1,15 @@
-flores news
-22.95	facebook/nllb-200-54.5B
+news
+53.3	wmt21/Facebook-AI
+53	wmt21/HuaweiTSC
+52.1	wmt21/VolcTrans-GLAT
+52	wmt21/NVIDIA-NeMo
+51.9	wmt21/Watermelon
+51.8	wmt21/VolcTrans-AT
+51.6	wmt21/Borderline
+50.8	wmt21/Online-W
+50.6	wmt21/SMU
+50.5	wmt21/ICL
+50.4	wmt21/Online-G
+49.7	wmt21/P3AI
+49.3	wmt21/Online-Y
+45.8	wmt21/happypoet

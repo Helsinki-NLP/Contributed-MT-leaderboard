@@ -1,0 +1,3 @@
+rus-eng	generaltest2022	33.3
+ukr-ces	generaltest2022	31.0
+ukr-eng	generaltest2022	31.2

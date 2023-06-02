@@ -1,0 +1,3 @@
+rus-eng	generaltest2022	0.57892	30.3		2016	38529
+ukr-ces	generaltest2022	0.50694	25.3		2812	41677
+ukr-eng	generaltest2022	0.55596	30.0		2018	34254

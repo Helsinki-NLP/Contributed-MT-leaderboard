@@ -1,1 +1,2 @@
 flores200-devtest	0.64934	facebook/nllb-200-54.5B
+generaltest2022	0.65991	wmt22/Lan-Bridge

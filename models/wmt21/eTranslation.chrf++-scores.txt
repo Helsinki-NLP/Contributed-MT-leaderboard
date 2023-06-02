@@ -1,1 +1,3 @@
+eng-ces	newstest2021	0.51343
+eng-deu	newstest2021	0.6871
 fra-deu	newstest2021	0.63989

@@ -1,2 +1,23 @@
 news
+0.61718	wmt21/Borderline
+0.61657	wmt21/DIDI-NLP
+0.61338	wmt21/Online-B
+0.61303	wmt21/MiSS
+0.61174	wmt21/yyds
+0.6107	wmt21/NiuTrans
+0.61061	wmt21/KwaiNLP
+0.60924	wmt21/IIE-MT
+0.60862	wmt21/SMU
+0.60415	wmt21/Facebook-AI
+0.59506	wmt21/UF
+0.59361	wmt21/XMU
+0.59351	wmt21/ICL
+0.59296	wmt21/HuaweiTSC
+0.59282	wmt21/P3AI
+0.58998	wmt21/NJUSC_TSC
+0.58754	wmt21/Machine_Translation
+0.58403	wmt21/HappyNewYear
+0.56436	wmt21/Online-G
 0.56361	facebook/nllb-200-54.5B
+0.5451	wmt21/Online-A
+0.54278	wmt21/Online-Y

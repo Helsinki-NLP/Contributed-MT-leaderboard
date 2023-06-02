@@ -1,0 +1,17 @@
+ces-ukr	generaltest2022	0.61456
+deu-eng	generaltest2022	0.64498
+eng-ces	generaltest2022	0.68688
+eng-deu	generaltest2022	0.66878
+eng-hrv	generaltest2022	0.61372
+eng-jpn	generaltest2022	0.25898
+eng-rus	generaltest2022	0.56858
+eng-ukr	generaltest2022	0.56097
+eng-zho	generaltest2022	0.41368
+fra-deu	generaltest2022	0.62992
+jpn-eng	generaltest2022	0.4631
+rus-eng	generaltest2022	0.6692
+rus-sah	generaltest2022	0.55586
+sah-rus	generaltest2022	0.25594
+ukr-ces	generaltest2022	0.58427
+ukr-eng	generaltest2022	0.65991
+zho-eng	generaltest2022	0.56106

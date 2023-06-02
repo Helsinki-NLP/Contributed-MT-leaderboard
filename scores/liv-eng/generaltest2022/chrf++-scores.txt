@@ -1,0 +1,5 @@
+0.52256	wmt22/TartuNLP
+0.51865	wmt22/TAL-SJTU
+0.46972	wmt22/HuaweiTSC
+0.45407	wmt22/Liv4ever
+0.34136	wmt22/NiuTrans

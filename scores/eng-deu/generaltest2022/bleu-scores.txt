@@ -1,0 +1,9 @@
+52.3	wmt22/Online-B
+51.6	wmt22/JDExploreAcademy
+50.5	wmt22/Online-Y
+50.1	wmt22/Online-A
+49.6	wmt22/Online-G
+49.4	wmt22/Lan-Bridge
+49.0	wmt22/PROMT
+48.9	wmt22/Online-W
+48.4	wmt22/OpenNMT

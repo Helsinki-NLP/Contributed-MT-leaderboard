@@ -1,0 +1,2 @@
+eng-liv	generaltest2022	25.8
+liv-eng	generaltest2022	32.5

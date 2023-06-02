@@ -1,0 +1,2 @@
+eng-liv	generaltest2022	0.438	17.0		420	9251
+liv-eng	generaltest2022	0.53154	30.4		420	10599

@@ -1,0 +1,4 @@
+deu-eng	generaltest2022	0.63895
+eng-deu	generaltest2022	0.65338
+eng-rus	generaltest2022	0.53864
+ukr-eng	generaltest2022	0.63269

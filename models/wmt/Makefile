@@ -64,3 +64,5 @@ ${SUBMISSIONS_DONE}:
 
 ${CONFERENCE}-news-systems:
 	git clone https://github.com/wmt-conference/${CONFERENCE}-news-systems.git
+
+

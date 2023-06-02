@@ -1,0 +1,2 @@
+eng-hau	newstest2021	19.5
+hau-eng	newstest2021	16.7

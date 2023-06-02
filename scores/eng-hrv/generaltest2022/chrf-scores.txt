@@ -1,0 +1,9 @@
+0.63814	wmt22/Online-B
+0.63712	wmt22/Lan-Bridge
+0.63266	wmt22/GTCOM
+0.61839	wmt22/HuaweiTSC
+0.61692	wmt22/Online-A
+0.61477	wmt22/NiuTrans
+0.61394	wmt22/SRPOL
+0.59156	wmt22/Online-Y
+0.57777	wmt22/Online-G

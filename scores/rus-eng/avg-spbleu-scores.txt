@@ -1,2 +1,12 @@
-flores news
-42.4	facebook/nllb-200-54.5B
+news
+61.4	wmt21/Facebook-AI
+59.7	wmt21/Online-G
+59.4	wmt21/NiuTrans
+59	wmt21/Manifold
+58.8	wmt21/Online-B
+58.7	wmt21/NVIDIA-NeMo
+56.9	wmt21/Online-A
+56.4	wmt21/AFRL
+54.8	wmt21/Online-W
+49.8	wmt21/Online-Y
+42.6	facebook/nllb-200-54.5B

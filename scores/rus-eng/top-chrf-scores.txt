@@ -1,2 +1,4 @@
 flores200-devtest	0.63732	facebook/nllb-200-54.5B
+generaltest2022	0.70011	wmt22/Online-G
 newstest2019	0.63758	facebook/nllb-200-54.5B
+newstest2021	0.72544	wmt21/Online-G

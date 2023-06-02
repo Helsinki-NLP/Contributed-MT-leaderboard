@@ -1,0 +1,11 @@
+40.7	wmt22/JDExploreAcademy
+39.5	wmt22/LanguageX
+37.8	wmt22/Online-G
+37.7	wmt22/AISP-SJTU
+37.4	wmt22/HuaweiTSC
+36.9	wmt22/Online-B
+36.4	wmt22/Lan-Bridge
+35.1	wmt22/Online-Y
+35.0	wmt22/Online-A
+33.7	wmt22/NiuTrans
+32.0	wmt22/DLUT

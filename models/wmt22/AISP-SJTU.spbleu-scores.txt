@@ -1,0 +1,4 @@
+eng-jpn	generaltest2022	22.5
+eng-zho	generaltest2022	58.9
+jpn-eng	generaltest2022	23.8
+zho-eng	generaltest2022	37.7

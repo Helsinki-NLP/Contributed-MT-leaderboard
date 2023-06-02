@@ -1,2 +1,6 @@
 ben-hin	florestest2021	21.7
+deu-eng	newstest2021	51.8
+eng-deu	newstest2021	57.0
+eng-hau	newstest2021	14.8
+hau-eng	newstest2021	14.9
 hin-ben	florestest2021	12.5

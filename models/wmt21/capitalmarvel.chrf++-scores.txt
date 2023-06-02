@@ -1,2 +1,3 @@
 eng-jpn	newstest2021	0.26642
+eng-zho	newstest2021	0.2548
 jpn-eng	newstest2021	0.47438

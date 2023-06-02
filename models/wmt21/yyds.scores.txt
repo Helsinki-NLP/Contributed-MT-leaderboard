@@ -1,0 +1,2 @@
+eng-zho	newstest2021	0.34141	5.8		1002	1411
+zho-eng	newstest2021	0.61174	32.7		1948	71331

@@ -1,0 +1,2 @@
+eng-jpn	generaltest2022	17.9
+jpn-eng	generaltest2022	21.1

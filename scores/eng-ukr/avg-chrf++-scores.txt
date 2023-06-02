@@ -1,2 +1,10 @@
-flores
-0.56293	facebook/nllb-200-54.5B
+generaltest2022
+0.56669	wmt22/Online-B
+0.56142	wmt22/GTCOM
+0.56097	wmt22/Lan-Bridge
+0.54305	wmt22/Online-G
+0.53251	wmt22/Online-A
+0.52084	wmt22/Online-Y
+0.52064	wmt22/eTranslation
+0.52043	wmt22/HuaweiTSC
+0.51129	wmt22/ARC-NKUA

@@ -1,0 +1,10 @@
+57.1	wmt21/Facebook-AI
+56.3	wmt21/NiuTrans
+55.9	wmt21/Online-G
+55.3	wmt21/Manifold
+55.0	wmt21/Online-B
+54.7	wmt21/NVIDIA-NeMo
+53.3	wmt21/AFRL
+52.8	wmt21/Online-A
+50.3	wmt21/Online-W
+45.3	wmt21/Online-Y
