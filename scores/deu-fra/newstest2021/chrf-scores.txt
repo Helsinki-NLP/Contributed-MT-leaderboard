@@ -4,6 +4,5 @@
 0.59061	wmt21/Online-W
 0.58405	wmt21/Online-B
 0.57742	wmt21/Online-G
-0.56838	wmt21/Online-Y
 0.56547	wmt21/talp_upc
 0.56332	wmt21/LISN

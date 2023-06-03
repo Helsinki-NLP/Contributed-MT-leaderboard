@@ -1,6 +1,23 @@
 # -*-makefile-*-
 
 
+.PHONY: print-model-info
+print-model-info:
+	@echo "${MODEL_URL}"
+	@echo "${MODEL_DIST}"
+	@echo "${MODEL}"
+	@echo "${LANGPAIRS}"
+	@echo "${TESTSET}"
+	@echo ""
+	@echo "available benchmarks:"
+	@echo "${AVAILABLE_BENCHMARKS}" | tr ' ' "\n"
+	@echo ""
+	@echo "tested benchmarks:"
+	@echo "${TESTED_BENCHMARKS}" | tr ' ' "\n"
+	@echo ""
+	@echo "missing benchmarks:"
+	@echo "${MISSING_BENCHMARKS}" | tr ' ' "\n"
+
 
 .PHONY: eval-pivot
 eval-pivot:
@@ -50,6 +67,7 @@ endif
 
 .PHONY: ${EVAL_MODEL_TARGETS}
 ${EVAL_MODEL_TARGETS}:
+	-${MAKE} MODEL=$(@:-evalmodel=) get-available-benchmarks
 	-${MAKE} MODEL=$(@:-evalmodel=) eval-model
 
 
@@ -57,26 +75,7 @@ EVAL_MODEL_REVERSE_TARGETS = $(call reverse,${EVAL_MODEL_TARGETS})
 
 eval-models-reverse-order: ${EVAL_MODEL_REVERSE_TARGETS}
 
-##-------------------------------------------------
-## evaluate the model with all benchmarks available
-## - if a model score file is missing:
-##      * fetch model and evaluation files
-##      * try to run evaluation again
-##      * make model score files again
-## pack evaluation files in a zip file
-## register the scores and update the leaderboard
-##-------------------------------------------------
 
-.PHONY: eval-model
-eval-model: ${MODEL_EVAL_SCORES}
-	@if [ $(words $(wildcard $^)) -ne $(words $^) ]; then \
-	  echo "score files missing ... fetch model and scores!"; \
-	  ${MAKE} fetch; \
-	  ${MAKE} eval-langpairs; \
-	  ${MAKE} cleanup; \
-	  ${MAKE} ${MODEL_EVAL_SCORES}; \
-	fi
-	${MAKE} pack-model-scores
 
 .PHONY: eval-model-files
 eval-model-files: ${MODEL_EVAL_SCORES}
@@ -88,8 +87,48 @@ update-eval-files:
 	fi
 	${MAKE} eval-model-files
 
+
+## new way of evaluating missing benchmarks
+## TODO: this would not add missing metrics
+
+.PHONY: eval-model
+eval-model: ${MODEL_TESTSETS}
+	@echo ".... evaluate ${MODEL}"
+ifneq (${MISSING_BENCHMARKS},)
+	${MAKE} fetch
+	${MAKE} eval-missing-benchmarks
+	${MAKE} cleanup
+	${MAKE} SKIP_NEW_EVALUATION=1 ${MODEL_EVAL_SCORES}; \
+	${MAKE} pack-model-scores
+else
+	@echo ".... nothing is missing"
+endif
+
+.PHONY: eval-missing-benchmarks
+eval-missing-benchmarks: ${MISSING_BENCHMARKS}
+
+${MISSING_BENCHMARKS}:
+	${MAKE} LANGPAIR=$(firstword $(subst /, ,$@)) \
+		TESTSET=$(lastword $(subst /, ,$@)) \
+	eval
+
+## get all available benchmarks for the current model
+
+.PHONY: get-available-benchmarks
+get-available-benchmarks: ${MODEL_TESTSETS}
+
+${MODEL_TESTSETS}: ${LANGPAIR_TO_TESTSETS}
+	rm -f $@
+	@l=$(foreach lp,${LANGPAIRS},\
+		$(shell grep '^${lp}	' ${LANGPAIR_TO_TESTSETS} | \
+			cut -f2 | tr ' ' "\n" | \
+			sed 's|^|${lp}/|' >> $@))
+	@echo "available testsets stored in $@"
+
+
+
 .PHONY: eval
-eval: 	${MODEL_DIR}/${TESTSET}.${LANGPAIR}.compare \
+eval:	${MODEL_DIR}/${TESTSET}.${LANGPAIR}.compare \
 	${MODEL_DIR}/${TESTSET}.${LANGPAIR}.eval
 
 
@@ -106,70 +145,26 @@ ${EVAL_LANGPAIR_TARGET}:
 EVAL_BENCHMARK_TARGETS = $(patsubst %,%-eval,${TESTSETS})
 
 .PHONY: eval-testsets
-eval-testsets: ${EVAL_BENCHMARK_TARGETS}
+eval-testsets: ${TRANSLATED_BENCHMARK_TARGETS}
 
 .PHONY: ${EVAL_BENCHMARK_TARGETS}
 ${EVAL_BENCHMARK_TARGETS}:
-	${MAKE} TESTSET=$(@:-eval=) eval
+	${MAKE} TESTSET=$(@:-compare=) eval
 
 
 
 
-TRANSLATED_BENCHMARKS = $(patsubst %,${MODEL_DIR}/%.${LANGPAIR}.compare,${TESTSETS})
-EVALUATED_BENCHMARKS  = $(patsubst %,${MODEL_DIR}/%.${LANGPAIR}.eval,${TESTSETS})
-BENCHMARK_SCORE_FILES = $(foreach m,${METRICS},$(patsubst %.eval,%.${m},${EVALUATED_BENCHMARKS}))
 
-## don't delete those files when used in implicit rules
-.NOTINTERMEDIATE: ${TRANSLATED_BENCHMARKS} ${EVALUATED_BENCHMARKS} ${BENCHMARK_SCORE_FILES}
-
-
-# .PHONY: eval-testsets
-# eval-testsets: ${TRANSLATED_BENCHMARKS} ${EVALUATED_BENCHMARKS}
-
-
-
-.INTERMEDIATE: ${WORK_DIR}/%.${LANGPAIR}.output
 
 
 ## compare source. reference and hypothesis
 ## NOTE: this only shows one reference translation
 
-${MODEL_DIR}/%.${LANGPAIR}.compare: ${TESTSET_SRC} ${TESTSET_TRG} ${WORK_DIR}/%.${LANGPAIR}.output
+${TRANSLATED_BENCHMARK}: ${SYSTEM_OUTPUT}
 	@mkdir -p ${dir $@}
-	if [ -s $(word 3,$^) ]; then \
-	  paste -d "\n" $^ | sed 'n;n;G;' > $@; \
+	@if [ -s $< ]; then \
+	  paste -d "\n" ${TESTSET_SRC} ${TESTSET_TRG} $< | sed 'n;n;G;' > $@; \
 	fi
-
-
-
-## OLD: expect testset files in TESTSET_DIR
-
-# ${MODEL_DIR}/%.${LANGPAIR}.compare:	${TESTSET_DIR}/%.${SRC} \
-# 					${TESTSET_DIR}/%.${TRG} \
-# 					${WORK_DIR}/%.${LANGPAIR}.output
-# 	@mkdir -p ${dir $@}
-# 	if [ -s $(word 3,$^) ]; then \
-# 	  paste -d "\n" $^ | sed 'n;n;G;' > $@; \
-# 	fi
-
-
-## don't make the temporary output a pre-requisite
-## (somehow it does not always work to skip creating it if the target already exists)
-
-
-#${MODEL_DIR}/%.${LANGPAIR}.compare: ${TESTSET_DIR}/%.${SRC} ${TESTSET_DIR}/%.${TRG}
-#	@mkdir -p ${dir $@}
-#	@if [ -s $(patsubst ${MODEL_DIR}/%.${LANGPAIR}.compare,${WORK_DIR}/%.${LANGPAIR}.output,$@) ]; then \
-#	  paste -d "\n" $^ $(patsubst ${MODEL_DIR}/%.${LANGPAIR}.compare,${WORK_DIR}/%.${LANGPAIR}.output,$@) |\
-#	  sed 'n;n;G;' > $@; \
-#	fi
-
-
-## concatenate all scores into one file
-## exception: comet scores: take only the last line and add the name of the metric
-## all others: just add the while file content (assume sacrebleu output)
-
-# ${MODEL_DIR}/%.${LANGPAIR}.eval: ${MODEL_DIR}/%.${LANGPAIR}.compare
 
 ${EVALUATED_BENCHMARKS}: ${BENCHMARK_SCORE_FILES}
 	${MAKE} $(patsubst %,$(basename $@).%,${METRICS})
@@ -182,6 +177,8 @@ ${EVALUATED_BENCHMARKS}: ${BENCHMARK_SCORE_FILES}
 	done
 	@rev $@ | sort | uniq -f2 | rev > $@.uniq
 	@mv -f $@.uniq $@
+
+
 
 
 ## adjust tokenisation to non-space-separated languages
@@ -239,63 +236,6 @@ ${MODEL_DIR}/%.${LANGPAIR}.ter: ${MODEL_DIR}/%.${LANGPAIR}.compare
 	@rm -f $@.hyp
 
 
-
-
-
-# ${MODEL_DIR}/%.${LANGPAIR}.spbleu: ${MODEL_DIR}/%.${LANGPAIR}.compare
-# 	@echo "... create ${MODEL}/$(notdir $@)"
-# 	@mkdir -p ${dir $@}
-# 	@sed -n '1~4p' $< > $@.src
-# 	@sed -n '2~4p' $< > $@.ref
-# 	@sed -n '3~4p' $< > $@.hyp
-# 	@cat $@.hyp | \
-# 	sacrebleu -f text --metrics=bleu --tokenize flores200 $@.ref > $@
-# 	@rm -f $@.src $@.ref $@.hyp
-
-# ${MODEL_DIR}/%.${LANGPAIR}.bleu: ${MODEL_DIR}/%.${LANGPAIR}.compare
-# 	@echo "... create ${MODEL}/$(notdir $@)"
-# 	@mkdir -p ${dir $@}
-# 	@sed -n '1~4p' $< > $@.src
-# 	@sed -n '2~4p' $< > $@.ref
-# 	@sed -n '3~4p' $< > $@.hyp
-# 	@cat $@.hyp | \
-# 	sacrebleu -f text ${SACREBLEU_PARAMS} $@.ref > $@
-# 	@rm -f $@.src $@.ref $@.hyp
-
-# ${MODEL_DIR}/%.${LANGPAIR}.chrf: ${MODEL_DIR}/%.${LANGPAIR}.compare
-# 	@echo "... create ${MODEL}/$(notdir $@)"
-# 	@mkdir -p ${dir $@}
-# 	@sed -n '1~4p' $< > $@.src
-# 	@sed -n '2~4p' $< > $@.ref
-# 	@sed -n '3~4p' $< > $@.hyp
-# 	@cat $@.hyp | \
-# 	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 $@.ref |\
-# 	perl -pe 'unless (/version\:1\./){@a=split(/\s+/);$$a[-1]/=100;$$_=join(" ",@a)."\n";}' > $@
-# 	@rm -f $@.src $@.ref $@.hyp
-
-# ${MODEL_DIR}/%.${LANGPAIR}.chrf++: ${MODEL_DIR}/%.${LANGPAIR}.compare
-# 	@echo "... create ${MODEL}/$(notdir $@)"
-# 	@mkdir -p ${dir $@}
-# 	@sed -n '1~4p' $< > $@.src
-# 	@sed -n '2~4p' $< > $@.ref
-# 	@sed -n '3~4p' $< > $@.hyp
-# 	@cat $@.hyp | \
-# 	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=chrf --width=3 --chrf-word-order 2 $@.ref |\
-# 	perl -pe 'unless (/version\:1\./){@a=split(/\s+/);$$a[-1]/=100;$$_=join(" ",@a)."\n";}' > $@
-# 	@rm -f $@.src $@.ref $@.hyp
-
-# ${MODEL_DIR}/%.${LANGPAIR}.ter: ${MODEL_DIR}/%.${LANGPAIR}.compare
-# 	@echo "... create ${MODEL}/$(notdir $@)"
-# 	@mkdir -p ${dir $@}
-# 	@sed -n '1~4p' $< > $@.src
-# 	@sed -n '2~4p' $< > $@.ref
-# 	@sed -n '3~4p' $< > $@.hyp
-# 	@cat $@.hyp | \
-# 	sacrebleu -f text ${SACREBLEU_PARAMS} --metrics=ter $@.ref > $@
-# 	@rm -f $@.src $@.ref $@.hyp
-
-
-
 ## COMET scores like to have GPUs but work without as well
 ## NOTE: this only compares with one reference translation!
 
@@ -331,7 +271,7 @@ ${MODEL_DIR}/%.${LANGPAIR}.comet: ${MODEL_DIR}/%.${LANGPAIR}.compare
 #	  grep -H chrF ${MODEL_DIR}/*.chrf | sed 's/.chrf//' | sort          > $@.chrf;
 
 
-${MODEL_SCORES}: ${TESTSET_INDEX}
+${MODEL_SCORES}: ${TESTSET_INDEX} ${TESTSET_FILES}
 ifndef SKIP_OLD_EVALUATION
 	-if [ ! -e $@ ]; then \
 	  mkdir -p $(dir $@); \

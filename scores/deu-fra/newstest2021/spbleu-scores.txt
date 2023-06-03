@@ -3,7 +3,6 @@
 37.2	wmt21/Manifold
 35.4	wmt21/Online-W
 34.9	wmt21/Online-B
-34.2	wmt21/Online-Y
 32.7	wmt21/Online-G
 32.6	wmt21/LISN
 32.1	wmt21/talp_upc

@@ -118,12 +118,12 @@ ifneq (${BENCHMARK},)
 remove: remove-benchmark
 	${MAKE} cleanup
 	${MAKE} average-score-files
-	${MAKE} -C .. scores/langpairs.txt user-scores/benchmarks.txt
+	${MAKE} -C .. scores/langpairs.txt scores/benchmarks.txt
 else ifneq (${MODEL},)
 remove: remove-model
 	${MAKE} cleanup
 	${MAKE} average-score-files
-	${MAKE} -C .. scores/langpairs.txt user-scores/benchmarks.txt
+	${MAKE} -C .. scores/langpairs.txt scores/benchmarks.txt
 endif
 
 

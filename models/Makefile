@@ -10,11 +10,11 @@
 #
 #-----------------------------------------------------------------------------
 #
-# Example: evaluate a user contributed translation of flores101-dev from English to Danish
+# Example: evaluate a user contributed translation of flores101-devtest from English to Danish
 #          for a user <username> and model <modelname>
 #
-#   mkdir -p work/username/modelname
-#   cp translation-file.txt work/username/modelname/flores101-devtest.eng-dan.output
+#   mkdir -p username/modelname
+#   cp translation-file.txt username/modelname/flores101-devtest.eng-dan.output
 #
 #   make USER_NAME=username USER_MODEL=modelname \
 #        TESTSETS=flores101-devtest LANGPAIR=eng-dan \

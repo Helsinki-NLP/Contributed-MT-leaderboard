@@ -101,8 +101,7 @@ ifneq ($(wildcard ${FILE}),)
 
 SRC           := ${firstword ${subst -, ,${LANGPAIR}}}
 TRG           := ${lastword ${subst -, ,${LANGPAIR}}}
-SYSTEM_OUTPUT := models/work/${USER}/${MODELNAME}/${BENCHMARK}.${LANGPAIR}.output
-# TESTSET_SRC := OPUS-MT-testsets/testsets/${LANGPAIR}/${BENCHMARK}.${SRC}
+SYSTEM_OUTPUT := models/${USER}/${MODELNAME}/${BENCHMARK}.${LANGPAIR}.output
 TESTSET_SRC   := $(patsubst %,OPUS-MT-testsets/%,$(shell grep '^${SRC}	${TRG}	${BENCHMARK}	' ${TESTSET_FILES} | cut -f7))
 MODEL_YAML    := models/${USER}/${MODELNAME}.yaml
 
@@ -129,7 +128,7 @@ ifdef WEBSITE
 endif
 endif
 	@if [ `cat ${FILE} | grep . | wc -l` -eq `cat ${TESTSET_SRC} | grep . | wc -l` ]; then \
-	  mkdir -p models/work/${USER}/${MODELNAME}; \
+	  mkdir -p $(dir ${SYSTEM_OUTPUT}); \
 	  cp ${FILE} ${SYSTEM_OUTPUT}; \
 	  ${MAKE} USER_CONTRIBUTED_FILE=${SYSTEM_OUTPUT} eval-userfile; \
 	else \
@@ -152,8 +151,8 @@ endif
 
 USER_CONTRIBUTED_FILES  := $(shell find models -type f -name '*.output')
 USER_CONTRIBUTED_FILE   ?= $(firstword ${USER_CONTRIBUTED_FILES})
-CONTRIBUTED_USERNAME    := $(word 3,$(subst /, ,${USER_CONTRIBUTED_FILE}))
-CONTRIBUTED_MODEL       := $(word 4,$(subst /, ,${USER_CONTRIBUTED_FILE}))
+CONTRIBUTED_USERNAME    := $(word 2,$(subst /, ,${USER_CONTRIBUTED_FILE}))
+CONTRIBUTED_MODEL       := $(word 3,$(subst /, ,${USER_CONTRIBUTED_FILE}))
 CONTRIBUTED_MODEL_YAML  := models/${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}.yml
 CONTRIBUTED_TRANSLATION := $(notdir ${USER_CONTRIBUTED_FILE})
 CONTRIBUTED_TRANSLATION_TESTSET  := $(basename $(basename ${CONTRIBUTED_TRANSLATION}))
@@ -186,7 +185,6 @@ ifneq ($(wildcard ${USER_CONTRIBUTED_FILE}),)
 		LANGPAIR='${CONTRIBUTED_TRANSLATION_LANGPAIR}' \
 		MODEL_URL='${CONTRIBUTED_MODEL_WEBSITE}' \
 	all
-	rm -f ${USER_CONTRIBUTED_FILE}
 	${MAKE} -C models MODEL='${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}' register
 	find scores/${CONTRIBUTED_TRANSLATION_LANGPAIR}/${CONTRIBUTED_TRANSLATION_TESTSET} \
 		-name '*unsorted*' -empty -delete
