@@ -55,6 +55,10 @@ else
   EVAL_FILES       := $(foreach model,${MODELS},$(foreach langpair,$(LANGPAIR),../models/${model}.eval.zip/${BENCHMARK}.${langpair}.*))
 endif
 else ifneq (${MODEL},)
+ifneq ($(wildcard ../models/${MODEL}),)
+  COMPARE_FILES    := $(wildcard ../models/${MODEL}/*.compare)
+  OUTPUT_FILES     := $(patsubst %.compare,%.output,${COMPARE_FILES})
+endif
 ifneq (${LANGPAIR},)
   EVAL_FILES       := $(foreach langpair,$(LANGPAIR),$(wildcard ../models/${MODEL}.eval.zip/*.${langpair}.*))
 endif
@@ -72,11 +76,18 @@ else ifneq (${LANGPAIR},)
   MODELSCORE_FILES := $(foreach model,$(MODELS),$(wildcard ../models/$(model).*.txt))
   EVALZIP_FILES    := $(foreach model,$(MODELS),../models/$(model).eval.zip)
   EVAL_FILES       := $(foreach model,${MODELS},$(foreach langpair,$(LANGPAIR),../models/${model}.eval.zip/*.${langpair}.*))
-else
+else ifdef ALL_SCORE_FILES
   TOPSCORE_FILES   := $(wildcard ../scores/*/top-*.txt)
   AVGSCORE_FILES   := $(wildcard ../scores/*/avg-*.txt)
   MODELSCORE_FILES := $(shell find ../models -name '*.txt')
   EVALZIP_FILES    := $(shell find ../models -name '*.eval.zip')
+  MODELZIP_FILES   := $(patsubst %.eval.zip,%.zip,${EVALZIP_FILES})
+  MODELS           := $(shell find ../models -name '*.scores.txt')
+else
+  MODELSCORE_FILES := $(shell find ../models -name '*.txt')
+  EVALZIP_FILES    := $(shell find ../models -name '*.eval.zip')
+  MODELZIP_FILES   := $(patsubst %.eval.zip,%.zip,${EVALZIP_FILES})
+  MODELS           := $(shell find ../models -name '*.scores.txt')
 endif
 
 
@@ -88,6 +99,34 @@ SCORE_FILE_DIRS_REMOVE  := $(patsubst %,%.remove-dir,${SCORE_FILE_DIRS})
 SCORE_FILES_REMOVE      := $(patsubst %.txt,%.remove,${SCORE_FILES})
 TOPSCORE_FILES_REMOVE   := $(patsubst %.txt,%.remove,${TOPSCORE_FILES})
 MODELSCORE_FILES_REMOVE := $(patsubst %.txt,%.remove,${MODELSCORE_FILES})
+
+
+
+#--------------------
+# `make create-model-zipfiles`
+#
+# make a new zip file that only includes logfiles from evaluation
+# translation files will stay in model sub dirs
+# also create system output files from the "compare" files if necessary
+#--------------------
+
+create-model-zipfiles: ${MODELZIP_FILES}
+
+${MODELZIP_FILES}: %.zip: %.eval.zip
+	mkdir -p $(@:.zip=)
+	cd $(@:.zip=) && unzip -u ../$(notdir $<)
+	cd $(@:.zip=) && find . -type f -not -name '*.compare' -not -name '*.output' | xargs zip ../$(notdir $@)
+	find $(@:.zip=) -type f -not -name '*.compare' -not -name '*.output' -delete
+	if [ `find $(@:.zip=) -name '*.compare' | wc -l` -gt `find $(@:.zip=) -name '*.output | wc -l` ]; then \
+	  find $(@:.zip=) -name '*.compare' -exec \
+	  sh -c 'i={}; o=$(echo $$i | sed "s/.compare/.output/"); if [ ! -e $$o ]; then sed -n "3~4p" $$i > $$o; fi' \; \
+	fi
+#	${MAKE} MODEL=$(patsubst ../models/%,%,$(@:.zip=)) create-output-files
+
+create-output-files: ${OUTPUT_FILES}
+
+%.output: %.compare
+	sed -n '3~4p' $< > $@
 
 
 

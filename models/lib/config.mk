@@ -50,6 +50,7 @@ TESTSET_INDEX   := ${OPUSMT_TESTSETS}/index.txt
 
 MODEL_HOME      ?= ${PWD}
 MODEL_DIR       := ${MODEL_HOME}/${MODEL}
+MODEL_LOGZIP    := ${MODEL_DIR}.zip
 MODEL_EVALZIP   := ${MODEL_DIR}.eval.zip
 MODEL_TESTSETS  := ${MODEL_DIR}.testsets.tsv
 

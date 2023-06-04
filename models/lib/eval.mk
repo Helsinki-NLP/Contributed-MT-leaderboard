@@ -399,11 +399,9 @@ pack-model-scores:
 	@if [ -d ${MODEL_DIR} ]; then \
 	  echo "... pack model scores from ${MODEL}"; \
 	  cd ${MODEL_DIR} && find . -name '*.*' | xargs zip ${MODEL_EVALZIP}; \
+	  cd ${MODEL_DIR} && find . -type f -not -name '*.compare' -not -name '*.output' | xargs zip ${MODEL_LOGZIP}; \
 	  find ${MODEL_DIR} -name '*.log' | sed 's|^${MODEL_DIR}/||' > ${MODEL_DIR}.logfiles; \
-	  find ${MODEL_DIR} -name '*.*' -delete; \
-	  if [ -d ${MODEL_DIR} ]; then \
-	    rmdir ${MODEL_DIR}; \
-	  fi \
+	  find ${MODEL_DIR} -type f -not -name '*.compare' -not -name '*.output' -delete; \
 	fi
 
 ## %P is not implemented in all versions of find (e.g. Mac OS)
