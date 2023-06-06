@@ -1,2 +1,1 @@
-deu-eng	generaltest2022	0.58393	40.3		1984	35504
 deu-fra	generaltest2022	0.54416	28.3		1984	38276

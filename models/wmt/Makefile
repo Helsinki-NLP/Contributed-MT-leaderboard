@@ -32,6 +32,11 @@ all:
 	${MAKE} eval-all
 	rm -fr ${CONFERENCE}-news-systems
 
+.PHONY: wmt
+wmt:
+	${MAKE} CONFERENCE=wmt21 all
+	${MAKE} CONFERENCE=wmt22 all
+
 .PHONY: wmt21
 wmt21:
 	${MAKE} CONFERENCE=wmt21 all
@@ -61,6 +66,8 @@ ${SUBMISSIONS_DONE}:
 	${MAKE} SUBMISSION=$(notdir $(@:.done=)) eval
 	@mkdir -p $(dir $@)
 	@touch $@
+
+fetch-results: ${CONFERENCE}-news-systems
 
 ${CONFERENCE}-news-systems:
 	git clone https://github.com/wmt-conference/${CONFERENCE}-news-systems.git

@@ -1,3 +1,1 @@
-eng-rus	generaltest2022	0.55848	29.8		2037	36472
-eng-ukr	generaltest2022	0.54825	26.2		2037	35418
 fra-deu	generaltest2022	0.68371	46.5		2006	37696

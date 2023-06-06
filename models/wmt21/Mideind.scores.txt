@@ -1,2 +1,1 @@
-eng-isl	newstest2021	0.53142	24.3		1000	25233
 isl-eng	newstest2021	0.57821	33.5		1000	22529

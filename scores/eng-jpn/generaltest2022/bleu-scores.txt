@@ -5,7 +5,7 @@
 16.6	wmt22/AISP-SJTU
 15.1	wmt22/Lan-Bridge
 13.6	wmt22/NAIST-NICT-TIT
-13.3	wmt22/KYB
+13.3	wmt22/Online-A
 12.8	wmt22/DLUT
 12.4	wmt22/Online-G
 8.0	wmt22/Online-B

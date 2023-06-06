@@ -1,3 +1,4 @@
+ces-eng	generaltest2022	0.73476
 ces-ukr	generaltest2022	0.61456
 deu-eng	generaltest2022	0.64498
 eng-ces	generaltest2022	0.68688

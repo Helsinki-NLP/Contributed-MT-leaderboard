@@ -3,7 +3,7 @@
 25.6	wmt22/JDExploreAcademy
 24.8	wmt22/DLUT
 24.7	wmt22/Online-B
-22.8	wmt22/Lan-Bridge
+22.8	wmt22/Online-A
 22.7	wmt22/NAIST-NICT-TIT
 22.4	wmt22/LanguageX
 22.0	wmt22/AISP-SJTU

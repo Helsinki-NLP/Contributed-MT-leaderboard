@@ -1,1 +1,2 @@
+ces-ukr	generaltest2022	42.2
 ukr-ces	generaltest2022	42.8

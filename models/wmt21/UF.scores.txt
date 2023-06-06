@@ -1,4 +1,1 @@
-deu-eng	newstest2021	0.69479	51.8		1000	20050
-eng-deu	newstest2021	0.70851	56.9		1002	27752
-eng-zho	newstest2021	0.33016	2.0		1002	1414
 zho-eng	newstest2021	0.59506	30.2		1948	71331

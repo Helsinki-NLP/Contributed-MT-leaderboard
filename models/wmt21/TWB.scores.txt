@@ -1,2 +1,1 @@
-eng-hau	newstest2021	0.48263	17.1		1000	32966
 hau-eng	newstest2021	0.40283	12.3		997	27372

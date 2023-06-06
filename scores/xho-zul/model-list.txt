@@ -1,6 +1,7 @@
 facebook/nllb-200-54.5B
 wmt21/FJDMATH
 wmt21/GTCOM
+wmt21/HuaweiTSC
 wmt21/MS-EgDC
 wmt21/Online-G
 wmt21/TRANSSION

@@ -1,2 +1,4 @@
+ces-eng	generaltest2022	61.3
+ces-ukr	generaltest2022	42.2
 eng-ces	generaltest2022	54.3
 ukr-ces	generaltest2022	43.0

@@ -1,5 +1,6 @@
 facebook/nllb-200-54.5B
 wmt21/CUNI-DocTransformer
+wmt21/CUNI-Marian-Baselines
 wmt21/CUNI-Transformer2018
 wmt21/Facebook-AI
 wmt21/Online-A

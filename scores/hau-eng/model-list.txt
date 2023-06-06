@@ -1,6 +1,7 @@
 facebook/nllb-200-54.5B
 wmt21/AMU
 wmt21/Facebook-AI
+wmt21/GTCOM
 wmt21/HuaweiTSC
 wmt21/MS-EgDC
 wmt21/Manifold
@@ -8,6 +9,7 @@ wmt21/NiuTrans
 wmt21/Online-B
 wmt21/Online-Y
 wmt21/P3AI
+wmt21/TRANSSION
 wmt21/TWB
 wmt21/UEdin
 wmt21/ZMT

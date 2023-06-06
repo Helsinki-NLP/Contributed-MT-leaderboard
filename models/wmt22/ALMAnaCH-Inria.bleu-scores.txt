@@ -1,3 +1,5 @@
+ces-eng	generaltest2022	36.8
+ces-ukr	generaltest2022	26.8
 rus-eng	generaltest2022	30.3
 ukr-ces	generaltest2022	25.3
 ukr-eng	generaltest2022	30.0

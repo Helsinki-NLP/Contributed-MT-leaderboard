@@ -5,7 +5,7 @@ news
 43.1	wmt21/CUNI-Transformer2018
 42.1	wmt21/eTranslation
 40	wmt21/CUNI-Marian-Baselines
-39.9	wmt21/Online-B
+39.9	wmt21/Online-A
 37	wmt21/Online-Y
 33.7	facebook/nllb-200-54.5B
 31.8	wmt21/Online-G

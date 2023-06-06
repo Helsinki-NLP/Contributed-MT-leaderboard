@@ -6,9 +6,11 @@ wmt21/HappyNewYear
 wmt21/HuaweiTSC
 wmt21/ICL
 wmt21/IIE-MT
+wmt21/KwaiNLP
 wmt21/Machine_Translation
 wmt21/MiSS
 wmt21/NJUSC_TSC
+wmt21/NiuTrans
 wmt21/Online-A
 wmt21/Online-B
 wmt21/Online-G

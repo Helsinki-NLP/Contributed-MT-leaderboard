@@ -3,6 +3,7 @@ wmt21/BUPT_rush
 wmt21/Facebook-AI
 wmt21/HuaweiTSC
 wmt21/ICL
+wmt21/Manifold
 wmt21/NVIDIA-NeMo
 wmt21/Online-A
 wmt21/Online-B

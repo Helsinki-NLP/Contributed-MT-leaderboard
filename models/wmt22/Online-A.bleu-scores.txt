@@ -1,3 +1,4 @@
+ces-eng	generaltest2022	59.4
 ces-ukr	generaltest2022	35.9
 deu-eng	generaltest2022	50.2
 deu-fra	generaltest2022	41.3

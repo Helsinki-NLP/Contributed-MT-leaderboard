@@ -1,2 +1,1 @@
-deu-eng	newstest2021	0.69029	51.8		1000	20019
 eng-deu	newstest2021	0.70849	56.5		1002	28024

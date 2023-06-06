@@ -19,41 +19,34 @@ PWD      := ${shell pwd}
 REPOHOME := ${PWD}/
 
 
-## all language pairs and all evaluation metrics
-LANGPAIRS  := $(sort $(notdir $(wildcard scores/*-*)))
-METRICS    := bleu spbleu chrf chrf++ comet
-
+## evaluation metrics
+METRICS := bleu spbleu chrf chrf++ # comet
+METRIC  ?= $(firstword ${METRICS})
 
 ifdef LANGPAIRDIR
-  LANGPAIR = $(lastword $(subst /, ,${LANGPAIRDIR}))
+  LANGPAIR := $(lastword $(subst /, ,${LANGPAIRDIR}))
 endif
 
 
-## default language pair and metric
+## SCORE_DIRS   = directories that contains new scores
+## LEADERBOARDS = list of leader boards that need to be updated
+##    - for all leaderboards with new scores if UPDATED_LEADERBOARDS is set
+##    - or for a selected LANGPAIR
 
-LANGPAIR   ?= deu-eng
-METRIC     ?= $(firstword ${METRICS})
-
-
-## all score files for the selected metric
-
-METRICFILES = ${sort ${wildcard scores/${LANGPAIR}/*/${METRIC}-scores.txt}}
-
-
-## UPDATE_SCORE_DIRS   = directory that contains new scores
-## UPDATE_LEADERBOARDS = list of leader boards that need to be updated
-##    (for all language pairs if UPDATE_ALL_LEADERBOARDS is set)
-##    (for the selected LANGPAIR otherwise)
-
-ifeq (${UPDATE_ALL_LEADERBOARDS},1)
-  UPDATE_SCORE_DIRS := $(sort $(dir ${wildcard scores/*/*/*.unsorted.txt}))
-  UPDATE_LANGPAIRS  := $(sort $(dir $(patsubst scores/%/,%,${UPDATE_SCORE_DIRS})))
+ifdef LANGPAIR
+  SCORE_DIRS := $(shell find scores/${LANGPAIR} -mindepth 2 -name '*.unsorted.txt' | cut -f1-3 -d/ | sort -u)
+  LANGPAIRS  := ${LANGPAIR}
+else ifeq (${UPDATED_LEADERBOARDS},1)
+  SCORE_DIRS := $(shell find scores -mindepth 3 -name '*.unsorted.txt' | cut -f1-3 -d/ | sort -u)
+  LANGPAIRS  := $(sort $(dir $(patsubst scores/%,%,${SCORE_DIRS})))
+  LANGPAIR   ?= $(firstword ${LANGPAIRS})
 else
-  UPDATE_SCORE_DIRS := $(sort $(dir ${wildcard scores/${LANGPAIR}/*/*.unsorted.txt}))
-  UPDATE_LANGPAIRS  := ${LANGPAIR}
+  LANGPAIRS  := $(shell find scores -name '*-*' -mindepth 1 -maxdepth 1 -type d | cut -f2 -d/ | sort -u)
+  LANGPAIR   := $(firstword ${LANGPAIRS})
+  SCORE_DIRS := $(shell find scores/${LANGPAIR} -mindepth 2 -name '*.unsorted.txt' | cut -f1-3 -d/ | sort -u)
 endif
-UPDATE_LEADERBOARDS := $(foreach m,${METRICS},$(patsubst %,%$(m)-scores.txt,${UPDATE_SCORE_DIRS}))
 
+LEADERBOARDS := $(foreach m,${METRICS},$(patsubst %,%/$(m)-scores.txt,${SCORE_DIRS}))
 
 
 LANGPAIR_LISTS  := scores/langpairs.txt
@@ -63,7 +56,7 @@ BENCHMARK_LISTS := scores/benchmarks.txt
 .PHONY: all
 all: scores
 	find scores -name '*unsorted*' -empty -delete
-	${MAKE} -s refresh-leaderboards
+	${MAKE} -s updated-leaderboards
 	${MAKE} -s scores/langpairs.txt user-scores/benchmarks.txt
 	find scores -name '*.txt' | grep -v unsorted | xargs git add
 
@@ -71,7 +64,7 @@ all: scores
 .PHONY: all-langpairs
 all-langpairs:
 	@find scores -name '*unsorted*' -empty -delete
-	${MAKE} -s update-all-leaderboards
+	${MAKE} -s refresh-leaderboards
 	${MAKE} -s scores/langpairs.txt scores/benchmarks.txt
 	find scores/ -name '*.txt' | grep -v unsorted | xargs git add
 
@@ -96,17 +89,24 @@ ifdef USER
 ifdef MODELNAME
 ifdef BENCHMARK
 ifdef LANGPAIR
-ifdef FILE
 ifneq ($(wildcard ${FILE}),)
 
 SRC           := ${firstword ${subst -, ,${LANGPAIR}}}
 TRG           := ${lastword ${subst -, ,${LANGPAIR}}}
+SYSTEM_LOGZIP := models/${USER}/${MODELNAME}.zip
+MODEL_YAML    := models/${USER}/${MODELNAME}.yaml
 SYSTEM_OUTPUT := models/${USER}/${MODELNAME}/${BENCHMARK}.${LANGPAIR}.output
 TESTSET_SRC   := $(patsubst %,OPUS-MT-testsets/%,$(shell grep '^${SRC}	${TRG}	${BENCHMARK}	' ${TESTSET_FILES} | cut -f7))
-MODEL_YAML    := models/${USER}/${MODELNAME}.yaml
 
-eval:
-ifneq ($(wildcard ${TESTSET_SRC}),)
+.PHONY: eval
+eval: ${SYSTEM_LOGZIP}
+
+${SYSTEM_OUTPUT}:
+	mkdir -p $(dir ${SYSTEM_OUTPUT})
+	cp ${FILE} ${SYSTEM_OUTPUT}
+
+
+${MODEL_YAML}:
 	@mkdir -p models/${USER}
 ifneq ($(wildcard ${MODEL_YAML}),)
 	@grep '^language-pairs: ' ${MODEL_YAML} |\
@@ -127,14 +127,30 @@ ifdef WEBSITE
 	@echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}
 endif
 endif
-	@if [ `cat ${FILE} | grep . | wc -l` -eq `cat ${TESTSET_SRC} | grep . | wc -l` ]; then \
-	  mkdir -p $(dir ${SYSTEM_OUTPUT}); \
-	  cp ${FILE} ${SYSTEM_OUTPUT}; \
-	  ${MAKE} USER_CONTRIBUTED_FILE=${SYSTEM_OUTPUT} eval-userfile; \
-	else \
-	  echo "${FILE} and ${TESTSET_SRC} have different lengths"; \
-	fi
 
+
+${SYSTEM_LOGZIP}: ${SYSTEM_OUTPUT} ${MODEL_YAML}
+ifneq ($(wildcard ${TESTSET_SRC}),)
+ifeq ($(shell cat ${FILE} | grep . | wc -l),$(shell cat ${TESTSET_SRC} | grep . | wc -l))
+	mkdir -p $(dir ${SYSTEM_OUTPUT})
+	cp ${FILE} ${SYSTEM_OUTPUT}
+	${MAKE} -C models \
+		USER_NAME='${USER}' \
+		USER_MODEL='${MODELNAME}' \
+		TESTSETS='${BENCHMARK}' \
+		LANGPAIR='${LANGPAIR}' \
+		MODEL_URL='${WEBSITE}' \
+	all
+	${MAKE} -C models MODEL='${USER}/${MODELNAME}' register
+	find scores/${LANGPAIR}/${BENCHMARK} -name '*unsorted*' -empty -delete
+	${MAKE} update-leaderboards
+	${MAKE} all-topavg-scores
+	find scores/${LANGPAIR}/${BENCHMARK} -name '*.txt' | grep -v unsorted | xargs git add
+	git add ${SYSTEM_OUTPUT} ${SYSTEM_LOGZIP}
+	git add models/${USER}/${MODELNAME}.*.txt models/${USER}/${MODELNAME}.*.registered
+else
+	echo "${FILE} and ${TESTSET_SRC} have different lengths"
+endif
 else
 	@echo "cannot find ${TESTSET_SRC}"
 endif
@@ -143,60 +159,16 @@ endif
 endif
 endif
 endif
-endif
+
+
+
+
+
+
+
+
 
 #--------------------------------------------------
-
-
-
-USER_CONTRIBUTED_FILES  := $(shell find models -type f -name '*.output')
-USER_CONTRIBUTED_FILE   ?= $(firstword ${USER_CONTRIBUTED_FILES})
-CONTRIBUTED_USERNAME    := $(word 2,$(subst /, ,${USER_CONTRIBUTED_FILE}))
-CONTRIBUTED_MODEL       := $(word 3,$(subst /, ,${USER_CONTRIBUTED_FILE}))
-CONTRIBUTED_MODEL_YAML  := models/${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}.yml
-CONTRIBUTED_TRANSLATION := $(notdir ${USER_CONTRIBUTED_FILE})
-CONTRIBUTED_TRANSLATION_TESTSET  := $(basename $(basename ${CONTRIBUTED_TRANSLATION}))
-CONTRIBUTED_TRANSLATION_LANGPAIR := $(patsubst .%,%,$(suffix $(basename ${CONTRIBUTED_TRANSLATION})))
-
-ifneq ($(wildcard ${CONTRIBUTED_MODEL_YAML}),)
-  CONTRIBUTED_MODEL_WEBSITE := $(shell grep 'website:' ${CONTRIBUTED_MODEL_YAML} | cut -f2- -d: | sed 's/^ *//')
-endif
-
-
-## evaluate a new user-contributed file
-## - register the scores
-## - update user-score leaderboards
-##
-## NOTE: don't allow concurrent jobs because of potential racing conditions!
-##
-## basic workflow:
-##
-## (1) evaluate translations for a contributed system output of a specific benchmark
-## (2) register scores in all affected leaderbaords
-## (3) update leader boards with the new scores
-##    
-
-eval-userfile:
-ifneq ($(wildcard ${USER_CONTRIBUTED_FILE}),)
-	${MAKE} -C models \
-		USER_NAME='${CONTRIBUTED_USERNAME}' \
-		USER_MODEL='${CONTRIBUTED_MODEL}' \
-		TESTSETS='${CONTRIBUTED_TRANSLATION_TESTSET}' \
-		LANGPAIR='${CONTRIBUTED_TRANSLATION_LANGPAIR}' \
-		MODEL_URL='${CONTRIBUTED_MODEL_WEBSITE}' \
-	all
-	${MAKE} -C models MODEL='${CONTRIBUTED_USERNAME}/${CONTRIBUTED_MODEL}' register
-	find scores/${CONTRIBUTED_TRANSLATION_LANGPAIR}/${CONTRIBUTED_TRANSLATION_TESTSET} \
-		-name '*unsorted*' -empty -delete
-	${MAKE} LANGPAIR='${CONTRIBUTED_TRANSLATION_LANGPAIR}' \
-		UPDATE_ALL_LEADERBOARDS=0 update-leaderboards
-	find scores/${CONTRIBUTED_TRANSLATION_LANGPAIR}/${CONTRIBUTED_TRANSLATION_TESTSET} \
-		-name '*.txt' | grep -v unsorted | xargs git add
-else
-	@echo "No file to be evaluated!"
-endif
-
-
 
 ## fetch all evaluation zip file
 
@@ -204,108 +176,69 @@ endif
 fetch-zipfiles:
 	${MAKE} -C models download-all
 
-.PHONY: langpair-scores
-langpair-scores:
-	@find scores -name '*unsorted*' -empty -delete
-	@for l in ${UPDATE_LANGPAIRS}; do \
-	  echo "extract top/avg scores for $$l"; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 top-scores; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 avg-scores; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 model-list; \
-	done
-
-.PHONY: all-langpair-scores
-all-langpair-scores:
-	@find scores -name '*unsorted*' -empty -delete
-	@for l in ${LANGPAIRS}; do \
-	  echo "extract top/avg scores for $$l"; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 top-scores; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 avg-scores; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 model-list; \
+.PHONY: all-topavg-scores
+all-topavg-scores:
+	for m in ${METRICS}; do \
+	  echo "extract top/avg scores for $$m scores"; \
+	  ${MAKE} -s METRIC=$$m top-langpair-scores avg-langpair-scores; \
 	done
 
 .PHONY: all-avg-scores
 all-avg-scores:
-	@find scores -name '*unsorted*' -empty -delete
-	@for l in ${LANGPAIRS}; do \
-	  echo "extract avg scores for $$l"; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 avg-scores; \
+	for m in ${METRICS}; do \
+	  echo "extract avg scores for $$m scores"; \
+	  ${MAKE} -s METRIC=$$m avg-langpair-scores; \
 	done
 
 .PHONY: all-top-scores
 all-top-scores:
-	@find scores -name '*unsorted*' -empty -delete
-	@for l in ${LANGPAIRS}; do \
-	  echo "extract top scores for $$l"; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 top-scores; \
+	for m in ${METRICS}; do \
+	  echo "extract top scores for $$m scores"; \
+	  ${MAKE} -s METRIC=$$m top-langpair-scores; \
 	done
 
-.PHONY: all-model-lists
-all-model-lists:
-	@find scores -name '*unsorted*' -empty -delete
-	@for l in ${LANGPAIRS}; do \
-	  echo "extract model lists $$l"; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 model-list; \
-	done
-
-
-.PHONY: update-leaderboard
-update-leaderboard: ${UPDATE_LEADERBOARDS}
-	echo "extract top/avg scores for $$l"; \
-	${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 top-scores
-	${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 avg-scores
-	${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 model-list
-
-
-# .PHONY: update-leaderboards
-# update-leaderboards: langpair-scores
-#	${MAKE} langpair-scores
 
 .PHONY: update-leaderboards
-update-leaderboards: ${UPDATE_LEADERBOARDS}
-	@for l in ${UPDATE_LANGPAIRS}; do \
-	  echo "extract top/avg scores for $$l"; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 top-scores; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 avg-scores; \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 model-list; \
-	done
+update-leaderboards: ${LEADERBOARDS}
 
 
-## update all leaderboards with phony targets for each language pair
+## update all updated leaderboards
+## (the ones with new scores registered)
+
+.PHONY: updated-leaderboards
+updated-leaderboards:
+	${MAKE} UPDATED_LEADERBOARDS=1 update-leaderboards
+	${MAKE} UPDATED_LEADERBOARDS=1 all-topavg-scores
+
+
+
+
+## refresh all leaderboards using phony targets for each language pair
 ## this scales to large lists of language pairs
-## but is super-slow ....
 
 UPDATE_LEADERBOARD_TARGETS = $(sort $(patsubst %,%-update-leaderboard,${LANGPAIRS}))
 
-.PHONY: update-all-leaderboards
-update-all-leaderboards: $(UPDATE_LEADERBOARD_TARGETS)
+.PHONY: refresh-leaderboards
+refresh-leaderboards: $(UPDATE_LEADERBOARD_TARGETS)
+	${MAKE} -s all-topavg-scores
 
 .PHONY: $(UPDATE_LEADERBOARD_TARGETS)
 $(UPDATE_LEADERBOARD_TARGETS):
 	${MAKE} -s LANGPAIR=$(@:-update-leaderboard=) update-leaderboards
 
 
-## update using a for loop:
-## this is much faster but  breaks if the LANGPAIRS becomes too big
-## (arghument list too long)
 
-.PHONY: update-all-leaderboards-loop
-update-all-leaderboards-loop:
-	@for l in ${LANGPAIRS}; do \
-	  ${MAKE} -s LANGPAIR=$$l UPDATE_ALL_LEADERBOARDS=0 update-leaderboards; \
-	done
-#	${MAKE} all-langpair-scores
+# refresh all leaderboards using find
 
-## another solution: use find
-.PHONY: update-all-leaderboards-find
-update-all-leaderboards-find:
+.PHONY: refresh-leaderboards-find
+refresh-leaderboards-find:
 	find scores -maxdepth 1 -mindepth 1 -type d \
-		-exec ${MAKE} -s LANGPAIRDIR={} update-leaderboards \;
+		-exec ${MAKE} LANGPAIRDIR={} update-leaderboards \;
+	${MAKE} -s all-topavg-scores
 
 
-.PHONY: sort-updated-leaderboards refresh-leaderboards
-sort-updated-leaderboards refresh-leaderboards:
-	${MAKE} UPDATE_ALL_LEADERBOARDS=1 update-leaderboards
+
+
 
 
 
@@ -313,41 +246,74 @@ sort-updated-leaderboards refresh-leaderboards:
 .PHONY: model-list
 model-list: scores/${LANGPAIR}/model-list.txt
 
-scores/${LANGPAIR}/model-list.txt: ${METRICFILES}
-	find ${dir $@} -name 'bleu-scores.txt' | xargs cut -f2 | sort -u > $@
+scores/%/model-list.txt:
+	find ${dir $@} -mindepth 2 -name '*-scores.txt' | xargs cut -f2 | sort -u > $@
 
 released-models.txt: scores
 	find scores -name 'bleu-scores.txt' | xargs cat | cut -f2 | sort -u > $@
 
-
 .PHONY: top-score-file top-scores
 top-score-file: scores/${LANGPAIR}/top-${METRIC}-scores.txt
-top-scores:
-	@for m in ${METRICS}; do \
-	  ${MAKE} -s METRIC=$$m top-score-file; \
-	done
+top-scores: $(foreach m,${METRICS},scores/${LANGPAIR}/top-${m}-scores.txt)
+top-langpair-scores: $(foreach l,${LANGPAIRS},scores/${l}/top-${METRIC}-scores.txt)
+
 
 .PHONY: avg-score-file avg-scores
 avg-score-file: scores/${LANGPAIR}/avg-${METRIC}-scores.txt
-avg-scores:
-	@for m in ${METRICS}; do \
-	  ${MAKE} -s METRIC=$$m avg-score-file; \
-	done
+avg-scores: $(foreach m,${METRICS},scores/${LANGPAIR}/avg-${m}-scores.txt)
+avg-langpair-scores: $(foreach l,${LANGPAIRS},scores/${l}/avg-${METRIC}-scores.txt)
 
-scores/${LANGPAIR}/top-${METRIC}-scores.txt: ${METRICFILES}
+
+
+## explicitely listing impict rules for each metric would make it possible
+## to call it for all possible language pairs (don't have to loop over language pairs)
+## disadvantages:
+##   * need to create new rules for new metrics
+##   * repeat the same recipe over and over again
+## for the second problem: could use "define" to define a rule
+## I don't know a principled solution for the first problem
+## foreach does not work, e.g. this would be cool:
+##
+# $(foreach m,${METRICS},scores/%/avg-${m}-scores.txt): scores/%/model-list.txt
+#	@echo "update $@"
+#	@tools/average-scores.pl $(sort $(wildcard $(dir $@)*/$(patsubst avg-%,%,$(notdir $@)))) > $@
+
+
+
+scores/${LANGPAIR}/avg-%-scores.txt: scores/${LANGPAIR}/model-list.txt
+	@echo "update $@"
+	@tools/average-scores.pl $(sort $(wildcard $(dir $@)*/$(patsubst avg-%,%,$(notdir $@)))) > $@
+
+scores/%/avg-${METRIC}-scores.txt: scores/%/model-list.txt
+	@echo "update $@"
+	@tools/average-scores.pl $(sort $(wildcard $(dir $@)*/$(patsubst avg-%,%,$(notdir $@)))) > $@
+
+
+scores/${LANGPAIR}/top-%-scores.txt: scores/${LANGPAIR}/model-list.txt
+	@echo "update $@"
 	@rm -f $@
-	@for f in $^; do \
+	@for f in $(sort $(wildcard $(dir $@)*/$(patsubst top-%,%,$(notdir $@)))); do \
 	  if [ -s $$f ]; then \
 	    t=`echo $$f | cut -f3 -d/`; \
 	    echo -n "$$t	" >> $@; \
-	    head -1 $$f     >> $@; \
+	    head -1 $$f           >> $@; \
 	  fi \
 	done
 
-scores/${LANGPAIR}/avg-${METRIC}-scores.txt: ${METRICFILES}
-	tools/average-scores.pl $^ > $@
+scores/%/top-${METRIC}-scores.txt: scores/%/model-list.txt
+	@echo "update $@"
+	@rm -f $@
+	@for f in $(sort $(wildcard $(dir $@)*/$(patsubst top-%,%,$(notdir $@)))); do \
+	  if [ -s $$f ]; then \
+	    t=`echo $$f | cut -f3 -d/`; \
+	    echo -n "$$t	" >> $@; \
+	    head -1 $$f           >> $@; \
+	  fi \
+	done
 
-${UPDATE_LEADERBOARDS}: ${UPDATE_SCORE_DIRS}
+
+${LEADERBOARDS}: ${SCORE_DIRS}
+	@echo "update $@"
 	@if [ -e $@ ]; then \
 	  if [ $(words $(wildcard ${@:.txt=}*.unsorted.txt)) -gt 0 ]; then \
 	    echo "merge and sort ${patsubst scores/%,%,$@}"; \
@@ -359,6 +325,7 @@ ${UPDATE_LEADERBOARDS}: ${UPDATE_SCORE_DIRS}
 	    rm -f $@.old.txt $@.new.txt; \
 	    rm -f $(wildcard ${@:.txt=}*.unsorted.txt); \
 	    mv $@.sorted $@; \
+	    rm -f $(dir $<)model-list.txt; \
 	  fi; \
 	else \
 	  if [ $(words $(wildcard ${@:.txt=}*.txt)) -gt 0 ]; then \
@@ -367,8 +334,38 @@ ${UPDATE_LEADERBOARDS}: ${UPDATE_SCORE_DIRS}
 	    sort -k2,2 -k1,1nr | uniq -f1 | sort -k1,1nr -u > $@.sorted; \
 	    rm -f $(wildcard ${@:.txt=}*.txt); \
 	    mv $@.sorted $@; \
+	    rm -f $(dir $<)model-list.txt; \
 	  fi; \
 	fi
+
+scores/${LANGPAIR}/%-scores.txt: scores/${LANGPAIR}
+	@echo "update $@"
+	@if [ -e $@ ]; then \
+	  if [ $(words $(wildcard ${@:.txt=}*.unsorted.txt)) -gt 0 ]; then \
+	    echo "merge and sort ${patsubst scores/%,%,$@}"; \
+	    sort -k2,2 -k1,1nr $@                           > $@.old.txt; \
+	    cat $(wildcard ${@:.txt=}*.unsorted.txt) | \
+	    grep '^[0-9\-]' | sort -k2,2 -k1,1nr            > $@.new.txt; \
+	    sort -m $@.new.txt $@.old.txt |\
+	    uniq -f1 | sort -k1,1nr -u                      > $@.sorted; \
+	    rm -f $@.old.txt $@.new.txt; \
+	    rm -f $(wildcard ${@:.txt=}*.unsorted.txt); \
+	    mv $@.sorted $@; \
+	    rm -f $(dir $<)model-list.txt; \
+	  fi; \
+	else \
+	  if [ $(words $(wildcard ${@:.txt=}*.txt)) -gt 0 ]; then \
+	    echo "merge and sort ${patsubst scores/%,%,$@}"; \
+	    cat $(wildcard ${@:.txt=}*.txt) | grep '^[0-9\-]' |\
+	    sort -k2,2 -k1,1nr | uniq -f1 | sort -k1,1nr -u > $@.sorted; \
+	    rm -f $(wildcard ${@:.txt=}*.txt); \
+	    mv $@.sorted $@; \
+	    rm -f $(dir $<)model-list.txt; \
+	  fi; \
+	fi
+
+
+
 
 
 
@@ -388,7 +385,4 @@ ${UPDATE_LEADERBOARDS}: ${UPDATE_SCORE_DIRS}
 include ${REPOHOME}lib/env.mk
 include ${REPOHOME}lib/config.mk
 include ${REPOHOME}lib/slurm.mk
-
-
-
 

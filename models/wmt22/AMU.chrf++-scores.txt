@@ -1,1 +1,2 @@
+ces-ukr	generaltest2022	0.58907
 ukr-ces	generaltest2022	0.5876

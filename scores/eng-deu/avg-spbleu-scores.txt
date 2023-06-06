@@ -6,8 +6,8 @@ news
 67.1	wmt21/NVIDIA-NeMo
 66.3	wmt21/HuaweiTSC
 65.4	wmt21/eTranslation
-65	wmt21/UF
-64.9	wmt21/Online-B
+65	wmt21/UEdin
+64.9	wmt21/Online-A
 64.5	wmt21/VolcTrans-AT
 64.2	wmt21/Manifold
 63	wmt21/P3AI

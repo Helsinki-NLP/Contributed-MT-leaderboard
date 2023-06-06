@@ -4,6 +4,6 @@
 43.1	wmt21/CUNI-Transformer2018
 42.1	wmt21/eTranslation
 40.0	wmt21/CUNI-Marian-Baselines
-39.9	wmt21/Online-B
+39.9	wmt21/Online-A
 37.0	wmt21/Online-Y
 31.8	wmt21/Online-G

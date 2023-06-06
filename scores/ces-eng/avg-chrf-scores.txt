@@ -1,10 +1,12 @@
-news
-0.63618	wmt21/Facebook-AI
-0.62573	wmt21/Online-B
-0.61869	wmt21/CUNI-DocTransformer
-0.61349	wmt21/Online-W
-0.60756	wmt21/Online-G
-0.6036	wmt21/Online-A
-0.5881	facebook/nllb-200-54.5B
-0.58388	wmt21/CUNI-Transformer2018
-0.57981	wmt21/Online-Y
+generaltest2022
+0.79696	wmt22/Online-W
+0.75046	wmt22/JDExploreAcademy
+0.7463	wmt22/Lan-Bridge
+0.74542	wmt22/Online-B
+0.7407	wmt22/Online-A
+0.7296	wmt22/CUNI-DocTransformer
+0.7237	wmt22/CUNI-Transformer
+0.71064	wmt22/Online-G
+0.70117	wmt22/SHOPLINE-PL
+0.68763	wmt22/Online-Y
+0.58339	wmt22/ALMAnaCH-Inria

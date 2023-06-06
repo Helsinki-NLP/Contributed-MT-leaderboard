@@ -4,7 +4,7 @@
 0.52869	wmt21/MiSS
 0.52803	wmt21/HuaweiTSC
 0.52571	wmt21/Online-B
-0.5242	wmt21/XMU
+0.5242	wmt21/KwaiNLP
 0.52136	wmt21/IIE-MT
 0.49562	wmt21/capitalmarvel
 0.48917	wmt21/Online-W

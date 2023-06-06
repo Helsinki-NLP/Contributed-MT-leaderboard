@@ -1,6 +1,1 @@
-ben-hin	florestest2021	0.51217	24.5		503	13829
-eng-hau	newstest2021	0.5042	18.9		1000	32966
 hau-eng	newstest2021	0.47238	18.8		997	27372
-hin-ben	florestest2021	0.47835	15.0		509	10438
-xho-zul	florestest2021	0.49749	11.8		503	9278
-zul-xho	florestest2021	0.50288	14.5		509	9038

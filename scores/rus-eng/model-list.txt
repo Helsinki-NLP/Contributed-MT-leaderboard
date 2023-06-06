@@ -11,6 +11,7 @@ wmt21/Online-W
 wmt21/Online-Y
 wmt22/ALMAnaCH-Inria
 wmt22/HuaweiTSC
+wmt22/JDExploreAcademy
 wmt22/Lan-Bridge
 wmt22/Online-A
 wmt22/Online-B

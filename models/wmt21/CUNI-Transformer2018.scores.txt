@@ -1,2 +1,1 @@
-ces-eng	newstest2021	0.58388	36.7		1000	21578
 eng-ces	newstest2021	0.54578	31.5		1002	25213

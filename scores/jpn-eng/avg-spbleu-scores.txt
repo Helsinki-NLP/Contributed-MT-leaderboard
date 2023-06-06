@@ -5,7 +5,7 @@ news
 30.9	wmt21/Online-B
 30.5	wmt21/MiSS
 30.4	wmt21/HuaweiTSC
-29.5	wmt21/XMU
+29.5	wmt21/KwaiNLP
 29.2	wmt21/IIE-MT
 27	wmt21/capitalmarvel
 25.9	wmt21/Online-W

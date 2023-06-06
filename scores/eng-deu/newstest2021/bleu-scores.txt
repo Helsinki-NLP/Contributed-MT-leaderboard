@@ -10,7 +10,7 @@
 56.9	wmt21/UF
 56.8	wmt21/Online-B
 56.5	wmt21/VolcTrans-AT
-56.0	wmt21/P3AI
+56.0	wmt21/Manifold
 53.6	wmt21/happypoet
 53.0	wmt21/Online-Y
 52.7	wmt21/Online-G

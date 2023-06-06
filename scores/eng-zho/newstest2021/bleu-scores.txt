@@ -6,11 +6,11 @@
 6.0	wmt21/ICL
 5.9	wmt21/BUPT_rush
 5.8	wmt21/yyds
-5.7	wmt21/WeChat-AI
+5.7	wmt21/NiuTrans
 5.5	wmt21/movelikeajaguar
 5.3	wmt21/MiSS
 5.1	wmt21/nuclear_trans
-4.9	wmt21/NJUSC_TSC
+4.9	wmt21/HuaweiTSC
 4.7	wmt21/SMU
 4.4	wmt21/bjtu_nmt
 4.0	wmt21/ZengHuiMT

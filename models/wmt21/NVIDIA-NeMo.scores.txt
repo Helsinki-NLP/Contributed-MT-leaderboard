@@ -1,4 +1,1 @@
-deu-eng	newstest2021	0.69157	52.0		1000	19967
-eng-deu	newstest2021	0.71744	58.8		1002	27712
-eng-rus	newstest2021	0.62362	41.6		1002	26133
 rus-eng	newstest2021	0.71331	54.7		1000	21232

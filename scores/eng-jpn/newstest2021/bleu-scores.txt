@@ -9,5 +9,11 @@
 20.4	wmt21/Illini
 19.7	wmt21/Online-G
 3.5	wmt21/NiuTrans
+1.2	wmt21/Online-A
 1.1	wmt21/Facebook-AI
+1.0	wmt21/HuaweiTSC
+0.7	wmt21/Online-Y
+0.6	wmt21/Online-W
+0.4	wmt21/Illini
 0.3	wmt21/BUPT_rush
+0.2	wmt21/MiSS
