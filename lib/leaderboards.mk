@@ -4,6 +4,7 @@
 #
 
 
+METRIC  ?= $(firstword ${METRICS})
 
 ifdef LANGPAIRDIR
   LANGPAIR := $(lastword $(subst /, ,${LANGPAIRDIR}))
