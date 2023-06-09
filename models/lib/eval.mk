@@ -194,6 +194,13 @@ ifneq ($(filter kor,${TRG}),)
   SACREBLEU_PARAMS = --tokenize ko-mecab
 endif
 
+.NOTINTERMEDIATE: ${MODEL_DIR}/%.${LANGPAIR}.spbleu \
+		${MODEL_DIR}/%.${LANGPAIR}.bleu \
+		${MODEL_DIR}/%.${LANGPAIR}.chrf \
+		${MODEL_DIR}/%.${LANGPAIR}.chrf++ \
+		${MODEL_DIR}/%.${LANGPAIR}.ter \
+		${MODEL_DIR}/%.${LANGPAIR}.comet
+
 
 ${MODEL_DIR}/%.${LANGPAIR}.spbleu: ${MODEL_DIR}/%.${LANGPAIR}.compare
 	@echo "... create ${MODEL}/$(notdir $@)"
@@ -403,6 +410,8 @@ pack-model-scores:
 	  find ${MODEL_DIR} -name '*.log' | sed 's|^${MODEL_DIR}/||' > ${MODEL_DIR}.logfiles; \
 	  find ${MODEL_DIR} -type f -not -name '*.compare' -not -name '*.output' -delete; \
 	fi
+
+
 
 ## %P is not implemented in all versions of find (e.g. Mac OS)
 ##
