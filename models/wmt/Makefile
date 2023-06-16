@@ -4,15 +4,6 @@
 #
 #
 
-## below we can specify what kind of test sets to include
-## we can probably skip that because nothing will be done for
-## benchmarks that are not listed in OPUS-MT-testsets
-#
-# AVAILABLE_TESTSETS = newstest2021
-# PERCENT = %
-# SUBMISSIONS_DIR = wmt21-news-systems/txt/system-outputs
-# SUBMISSIONS = $(filter $(patsubst %,%.${PERCENT},${AVAILABLE_TESTSETS}),$(notdir $(wildcard ${SUBMISSIONS_DIR}/*.*)))
-
 CONFERENCE ?= wmt21
 
 SUBMISSIONS_DIR = ${CONFERENCE}-news-systems/txt/system-outputs
