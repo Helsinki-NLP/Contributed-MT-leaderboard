@@ -1,0 +1,4 @@
+chrF2|nrefs:1|case:mixed|eff:yes|nc:6|nw:0|space:no|version:2.3.1 = 0.50142
+BLEU|nrefs:1|case:mixed|eff:no|tok:flores200|smooth:exp|version:2.3.1 = 23.6 53.7/32.6/21.5/14.4 (BP = 0.871 ratio = 0.879 hyp_len = 33984 ref_len = 38682)
+chrF2++|nrefs:1|case:mixed|eff:yes|nc:6|nw:2|space:no|version:2.3.1 = 0.45178
+BLEU|nrefs:1|case:mixed|eff:no|tok:13a|smooth:exp|version:2.3.1 = 13.0 48.0/19.6/9.8/5.1 (BP = 0.886 ratio = 0.892 hyp_len = 18541 ref_len = 20788)
