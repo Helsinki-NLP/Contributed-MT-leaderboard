@@ -100,6 +100,11 @@ ifdef WEBSITE
 	@echo "website: ${WEBSITE}"                                >> ${MODEL_YAML}.tmp
 	@mv ${MODEL_YAML}.tmp ${MODEL_YAML}
 endif
+ifdef CONTACT
+	@grep -v '^contact: ' ${MODEL_YAML}                         > ${MODEL_YAML}.tmp || exit 0
+	@echo "contact: ${CONTACT}"                                >> ${MODEL_YAML}.tmp
+	@mv ${MODEL_YAML}.tmp ${MODEL_YAML}
+endif
 else
 	@echo "language-pairs: ${LANGPAIR}"                         > ${MODEL_YAML}
 ifdef WEBSITE
