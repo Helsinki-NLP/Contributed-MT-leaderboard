@@ -80,10 +80,19 @@ TESTSET_SRC   := $(patsubst %,OPUS-MT-testsets/%,$(shell grep '^${SRC}	${TRG}	${
 .PHONY: eval
 eval: ${SYSTEM_LOGZIP}
 
-${SYSTEM_OUTPUT}:
+${SYSTEM_OUTPUT}: ${FILE}
+ifneq ($(wildcard ${TESTSET_SRC}),)
+ifeq ($(shell cat ${FILE} | grep . | wc -l),$(shell cat ${TESTSET_SRC} | grep . | wc -l))
 	mkdir -p $(dir ${SYSTEM_OUTPUT})
 	cp ${FILE} ${SYSTEM_OUTPUT}
-
+else
+	@echo "${FILE} and ${TESTSET_SRC} have different lengths"
+	@exit 1
+endif
+else
+	@echo "cannot find ${TESTSET_SRC}"
+	@exit 1
+endif
 
 ${MODEL_YAML}:
 	@mkdir -p models/${USER}
@@ -114,10 +123,6 @@ endif
 
 
 ${SYSTEM_LOGZIP}: ${SYSTEM_OUTPUT} ${MODEL_YAML}
-ifneq ($(wildcard ${TESTSET_SRC}),)
-ifeq ($(shell cat ${FILE} | grep . | wc -l),$(shell cat ${TESTSET_SRC} | grep . | wc -l))
-	mkdir -p $(dir ${SYSTEM_OUTPUT})
-	cp ${FILE} ${SYSTEM_OUTPUT}
 	${MAKE} -C models \
 		USER_NAME='${USER}' \
 		USER_MODEL='${MODELNAME}' \
@@ -132,12 +137,8 @@ ifeq ($(shell cat ${FILE} | grep . | wc -l),$(shell cat ${TESTSET_SRC} | grep . 
 	find scores/${LANGPAIR}/${BENCHMARK} -name '*.txt' | grep -v unsorted | xargs git add
 	git add ${SYSTEM_OUTPUT} ${SYSTEM_LOGZIP}
 	git add models/${USER}/${MODELNAME}.*.txt models/${USER}/${MODELNAME}.*.registered
-else
-	echo "${FILE} and ${TESTSET_SRC} have different lengths"
-endif
-else
-	@echo "cannot find ${TESTSET_SRC}"
-endif
+
+
 endif
 endif
 endif
