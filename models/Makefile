@@ -70,5 +70,6 @@ all:
 
 
 include ${REPOHOME}build/config.mk
+include ${REPOHOME}build/eval.mk
 include ${REPOHOME}build/register.mk
 include ${REPOHOME}build/storage.mk
