@@ -3,9 +3,6 @@
 # TODO: this makefile if most likely broken!
 #
 
-PWD      := ${shell pwd}
-REPOHOME := ${PWD}/../../../
-
 
 MODEL_NAME = nllb-200-54.5B
 USER_NAME  = facebook
@@ -22,8 +19,7 @@ MODEL_WORKDIR = ../work/unverified/${USER_NAME}/${MODEL_NAME}
 all: update ${MODEL_NAME}.txt
 
 
-include ${REPOHOME}build/config.mk
-# include ../../lib/config.mk
+include ../../../build/config.mk
 
 
 FLORES200_LANGS = ace_Arab ace_Latn acm acq aeb afr ajp aka als amh apc ara ara_Latn ars ary arz asm ast awa ayr azb azj bak bam ban bel bem ben bho bjn_Arab bjn_Latn bod bos bug bul cat ceb ces cjk ckb cmn_Hans cmn_Hant crh cym dan deu dik dyu dzo ell eng epo est eus ewe fao fij fin fon fra fur fuv gaz gla gle glg grn guj hat hau heb hin hne hrv hun hye ibo ilo ind isl ita jav jpn kab kac kam kan kas_Arab kas_Deva kat kaz kbp kea khk khm kik kin kir kmb kmr knc_Arab knc_Latn kon kor lao lij lim lin lit lmo ltg ltz lua lug luo lus lvs mag mai mal mar min_Arab min_Latn mkd mlt mni mos mri msa mya nld nno nob npi nso nus nya oci ory pag pan pap pbt pes plt pol por prs quy ron run rus sag san sat scn shn sin slk slv smo sna snd som sot spa srd srp_Cyrl ssw sun swe swh szl tam taq_Latn taq_Tfng tat tel tgk tgl tha tir tpi tsn tso tuk tum tur twi tzm uig ukr umb urd uzn vec vie war wol xho ydd yor yue zsm zul

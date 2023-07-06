@@ -35,14 +35,12 @@
 #-----------------------------------------------------------------------------
 
 
-PWD      := ${shell pwd}
-REPOHOME := ${PWD}/../
-
 METRICS     := bleu spbleu chrf chrf++
 
 
 ## specify all models
 
+PWD         := ${shell pwd}
 MODEL_HOME  := ${PWD}
 USER_NAME   ?= testuser
 USER_MODEL  ?= testmodel
@@ -69,7 +67,7 @@ all:
 
 
 
-include ${REPOHOME}build/config.mk
-include ${REPOHOME}build/eval.mk
-include ${REPOHOME}build/register.mk
-include ${REPOHOME}build/storage.mk
+include ../build/config.mk
+include ../build/eval.mk
+include ../build/register.mk
+include ../build/storage.mk

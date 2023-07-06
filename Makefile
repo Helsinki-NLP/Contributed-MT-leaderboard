@@ -15,13 +15,8 @@
 #---------------------------------------------------------------------------------------------
 
 
-PWD      := ${shell pwd}
-REPOHOME := ${PWD}/
-
-
 ## evaluation metrics
 METRICS := bleu spbleu chrf chrf++ # comet
-
 
 
 .PHONY: all
@@ -42,11 +37,8 @@ all-langpairs:
 
 
 
-include ${REPOHOME}lib/leaderboards.mk
-include ${REPOHOME}lib/env.mk
-include ${REPOHOME}lib/config.mk
-include ${REPOHOME}lib/slurm.mk
-
+include build/leaderboards.mk
+include build/config.mk
 
 
 #--------------------------------------------------
