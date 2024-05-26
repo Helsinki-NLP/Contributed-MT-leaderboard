@@ -1,9 +1,0 @@
-0.61747	wmt21/Facebook-AI
-0.61445	wmt21/Online-W
-0.60897	wmt21/Online-B
-0.60614	wmt21/Online-G
-0.59883	wmt21/NVIDIA-NeMo
-0.59669	wmt21/Online-A
-0.59018	wmt21/Manifold
-0.57959	wmt21/NiuTrans
-0.57079	wmt21/Online-Y

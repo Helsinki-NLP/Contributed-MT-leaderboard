@@ -1,7 +1,0 @@
-flores
-14.5	wmt21/TRANSSION
-11.9	wmt21/GTCOM
-10.5	facebook/nllb-200-54.5B
-9.9	wmt21/HuaweiTSC
-9.2	wmt21/MS-EgDC
-3.6	wmt21/Online-G

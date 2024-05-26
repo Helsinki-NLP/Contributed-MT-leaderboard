@@ -1,2 +1,0 @@
-flores200-devtest	0.57269	facebook/nllb-200-54.5B
-newstest2021	0.46529	wmt21/Facebook-AI

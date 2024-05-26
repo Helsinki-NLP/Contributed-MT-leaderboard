@@ -1,5 +1,0 @@
-21.7	wmt21/TRANSSION
-18.1	wmt21/GTCOM
-17.2	wmt21/HuaweiTSC
-15.8	wmt21/MS-EgDC
-5.9	wmt21/Online-G

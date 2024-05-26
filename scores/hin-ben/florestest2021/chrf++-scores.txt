@@ -1,9 +1,0 @@
-0.43753	wmt21/Online-B
-0.43591	wmt21/TRANSSION
-0.43021	wmt21/GTCOM
-0.4237	wmt21/Online-A
-0.41632	wmt21/HuaweiTSC
-0.41362	wmt21/UEdin
-0.39365	wmt21/MS-EgDC
-0.39081	wmt21/Online-Y
-0.3247	wmt21/Online-G

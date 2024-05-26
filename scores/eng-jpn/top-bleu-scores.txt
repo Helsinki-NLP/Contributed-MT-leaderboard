@@ -1,3 +1,0 @@
-flores200-devtest	24.6	facebook/nllb-200-54.5B
-generaltest2022	25.4	wmt22/JDExploreAcademy
-newstest2021	30.6	wmt21/WeChat-AI

@@ -1,4 +1,0 @@
-flores200-devtest	42.2	facebook/nllb-200-54.5B
-generaltest2022	50.7	wmt22/Online-G
-newstest2019	42.6	facebook/nllb-200-54.5B
-newstest2021	61.4	wmt21/Facebook-AI

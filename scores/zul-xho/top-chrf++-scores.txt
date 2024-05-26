@@ -1,2 +1,0 @@
-flores200-devtest	0.42613	facebook/nllb-200-54.5B
-florestest2021	0.44739	wmt21/TRANSSION

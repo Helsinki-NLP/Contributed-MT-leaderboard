@@ -1,7 +1,0 @@
-flores
-0.50288	wmt21/TRANSSION
-0.48644	facebook/nllb-200-54.5B
-0.48644	wmt21/HuaweiTSC
-0.47577	wmt21/MS-EgDC
-0.47491	wmt21/GTCOM
-0.36075	wmt21/Online-G

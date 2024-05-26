@@ -1,2 +1,0 @@
-flores200-devtest	46.0	facebook/nllb-200-54.5B
-generaltest2022	47.4	wmt22/Lan-Bridge

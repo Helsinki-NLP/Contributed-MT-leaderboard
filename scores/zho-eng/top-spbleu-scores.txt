@@ -1,3 +1,0 @@
-generaltest2022	40.7	wmt22/JDExploreAcademy
-newstest2019	31.3	facebook/nllb-200-54.5B
-newstest2021	36.9	wmt21/DIDI-NLP
