@@ -1,2 +1,0 @@
-flores200-devtest	33.1	facebook/nllb-200-54.5B
-generaltest2022	44.7	wmt22/AMU

@@ -1,2 +1,0 @@
-flores200-devtest	28.8	facebook/nllb-200-54.5B
-newstest2021	20.4	wmt21/P3AI

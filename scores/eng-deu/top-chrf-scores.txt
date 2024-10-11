@@ -1,3 +1,0 @@
-flores200-devtest	0.65184	facebook/nllb-200-54.5B
-generaltest2022	0.69739	wmt22/Online-B
-newstest2021	0.74991	wmt21/VolcTrans-GLAT

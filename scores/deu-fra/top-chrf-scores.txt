@@ -1,3 +1,0 @@
-flores200-devtest	0.63578	facebook/nllb-200-54.5B
-generaltest2022	0.74623	wmt22/Online-B
-newstest2021	0.62621	wmt21/P3AI

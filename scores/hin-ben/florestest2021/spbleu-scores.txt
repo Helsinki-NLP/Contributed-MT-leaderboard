@@ -1,9 +1,0 @@
-29.2	wmt21/Online-B
-29.0	wmt21/TRANSSION
-27.4	wmt21/GTCOM
-27.3	wmt21/Online-A
-26.0	wmt21/HuaweiTSC
-25.5	wmt21/UEdin
-24.0	wmt21/Online-Y
-23.4	wmt21/MS-EgDC
-15.6	wmt21/Online-G

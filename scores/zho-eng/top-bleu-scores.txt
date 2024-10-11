@@ -1,3 +1,0 @@
-generaltest2022	37.9	wmt22/JDExploreAcademy
-newstest2019	28.5	facebook/nllb-200-54.5B
-newstest2021	33.4	wmt21/Borderline

@@ -1,2 +1,0 @@
-29.6	wmt22/Online-G
-7.1	wmt22/Lan-Bridge

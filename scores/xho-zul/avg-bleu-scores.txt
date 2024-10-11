@@ -1,7 +1,0 @@
-flores
-14	facebook/nllb-200-54.5B
-11.8	wmt21/TRANSSION
-11.5	wmt21/GTCOM
-9.9	wmt21/MS-EgDC
-9.8	wmt21/FJDMATH
-3.9	wmt21/Online-G

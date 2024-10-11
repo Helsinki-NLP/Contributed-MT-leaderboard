@@ -1,9 +1,0 @@
-news
-60.4	wmt21/Online-W
-43.8	wmt21/Online-B
-40.6	wmt21/Online-A
-39.5	wmt21/Online-Y
-39.3	wmt21/P3AI
-37.3	wmt21/LISN
-36.9	wmt21/Online-G
-36.3	wmt21/talp_upc

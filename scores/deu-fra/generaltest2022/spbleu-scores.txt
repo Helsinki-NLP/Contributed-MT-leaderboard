@@ -1,6 +1,0 @@
-62.5	wmt22/Online-B
-51.6	wmt22/Online-Y
-49.7	wmt22/Online-W
-46.1	wmt22/Online-A
-44.0	wmt22/Online-G
-33.8	wmt22/LT22
