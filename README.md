@@ -12,63 +12,36 @@ A repository of scores and leaderboard for MT models and benchmarks.
 
 ## Leaderboards
 
-The `scores` directory includes leaderboards for each evaluated benchmark in [OPUS-MT-testsets](https://github.com/Helsinki-NLP/OPUS-MT-testsets/). The benchmark-specific leaderboards are stored as plain text files with TAB-separated values using the following file structure:
+The `scores` directory includes leaderboards for each evaluated benchmark in [OPUS-MT-testsets](https://github.com/Helsinki-NLP/OPUS-MT-testsets/). The benchmark-specific leaderboards are stored in SQLite3 databases, one per benchmark:
 
 ```
-scores/src-trg/benchmark/metric-scores.txt
-```
-
-`src` and `trg` correspond to the language pair, `benchmark` is the name of the benchmark and `metric` is the name of evaluation metric such as bleu, chrf or comet. The file names and structure corresponds to the benchmark files in [OPUS-MT-testsets](https://github.com/Helsinki-NLP/OPUS-MT-testsets). 
-
-Furthermore, we also keep lists of the top-scoring models per benchmark for each language pair and a list of model score averages aggregated over selected benchmarks for each language pair. There are separate lists for each evaluation metric. For example, for [German - Ukrainian](scores/deu-ukr), there are score files like
-
-```
-scores/deu-ukr/avg-bleu-scores.txt
-scores/deu-ukr/avg-chrf-scores.txt
-scores/deu-ukr/avg-comet-scores.txt
-
-scores/deu-ukr/top-bleu-scores.txt
-scores/deu-ukr/top-chrf-scores.txt
-scores/deu-ukr/top-comet-scores.txt
-```
-
-Scores for other models than OPUS-MT will be stored in the same way in the sub-directory `external-scores`.
-
-
-### File Formats
-
-All leaderboard files follow a very simple format with two TAB-separated values and rows sorted by score. The columns are:
-
-* the actual score
-* the model name
-
-For example, the BLEU-score leaderboard for the Flores200 devtest benchmark in German-English is stored in [scores/deu-eng/flores200-devtest/bleu-scores.txt](scores/deu-eng/flores200-devtest/bleu-scores.txt) and includes lines like:
-
-```
-45.8	facebook/nllb-200-54.5B
-```
-
-The best performaning models for each benchmark for a given language pair are listed with the following format: TAB-separated plain text files with 3 columns:
-
-* the name of the benchmark
-* the top score among all models
-* the name of the top-scoring model
-
-To give an example, the top BLEU score for German-English benchmarks is stored in [scores/deu-eng/top-bleu-scores.txt](scores/deu-eng/top-bleu-scores.txt) with lines like:
-
-```
-flores200-devtest	45.8	facebook/nllb-200-54.5B
+scores/bleu_scores.db
+scores/chrf_scores.db
+scores/chrf++_scores.db
 ...
 ```
 
-
-To make it easier to compare model performance, we also keep model lists sorted by scores averaged over a selected number of benchmarks. Those files start with a line that list the selected benchmarks used for computing the score and the following lines follow the standard leaderboard file format with TAB-separated values for the (averaged score and the download link of the model. For example, [scores/deu-ukr/avg-bleu-scores.txt](scores/deu-ukr/avg-bleu-scores.txt) starts like this:
-
+There are also plain text files that indicate the time stamp of the last update for those DB files. This is convenient for a web app to decide whether it needs to fetch a new version of the database. The naming conventions are very similar for the timestamp files:
 
 ```
-flores news
-22.95	facebook/nllb-200-54.5B
+scores/bleu_scores.date
+scores/chrf_scores.date
+scores/chrf++_scores.date
+...
 ```
+
+Each database contains just one simple table called `scores` with the essential information about test set scores:
+
+
+| field    | data type | explanation |
+|----------|-----------|-------------|
+| model    | TEXT      | model name including path in this repository relative to the model dir |
+| langpair | TEXT      | language pair of the benchmark from OPUS-MT-testsets (ISO639-3 language codes) |
+| testset  | TEXT      | name of the benchmark (according to OPUS-MT-testsets) |
+| score    | NUMERIC   | score of the evaluation |
+
+The primary key is `(model, langpair, testset)`.
+All scores are taken from the model score files described below.
 
 
 
