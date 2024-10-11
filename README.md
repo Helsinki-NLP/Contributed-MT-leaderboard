@@ -1,13 +1,8 @@
 
 # Contributed MT leaderboard
 
-A repository of scores and leaderboard for MT models and benchmarks.
-
-* [model scores for various benchmarks](models)
-* [leaderboards per benchmark](scores)
-* [recipes for automatic model evaluation](models)
-* [merged benchmark translations for better comparison](compare)
-* [web-based dashboard](https://github.com/Helsinki-NLP/OPUS-MT-dashboard)
+A repository of scores and for MT models based on contributed testset translations.
+The scores are intended to feed into the [OPUS-MT dashboard](https://opus.nlpl.eu/dashboard/). 
 
 
 ## Leaderboards
